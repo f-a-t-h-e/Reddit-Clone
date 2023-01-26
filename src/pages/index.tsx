@@ -5,5 +5,15 @@ import { Inter } from "@next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  return <>HEY</>;
+  return (
+    <div
+      style={{
+        height: "70rem",
+        width: "100%",
+        backgroundColor: "black",
+      }}
+    >
+      Hello
+    </div>
+  );
 }
