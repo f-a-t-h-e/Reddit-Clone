@@ -1,4 +1,3 @@
-import { PhoneIcon } from "@chakra-ui/icons";
 import {
   Text,
   Modal,
@@ -15,29 +14,106 @@ import {
   InputLeftElement,
   Stack,
   Checkbox,
-  Radio,
-  RadioGroup,
   Flex,
   Icon,
 } from "@chakra-ui/react";
+import {
+  doc,
+  getDoc,
+  runTransaction,
+  serverTimestamp,
+  setDoc,
+  type Transaction,
+} from "firebase/firestore";
 import React, { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { BsFillPersonFill, BsFillEyeFill } from "react-icons/bs";
 import { HiLockClosed } from "react-icons/hi";
+import { auth, firestore } from "@/firebase/clientApp";
 
 type Props = {
   open: boolean;
   onClose: () => void;
 };
+const format = /^[\w]{3,21}$/;
 
 const CreateCommunityModal = ({ open, onClose }: Props) => {
-  const [communityName, setCommunityName] = useState("");
+  const [user] = useAuthState(auth);
+  // validation
   const [charsRemaining, setCharsRemaining] = useState(21);
+  const [error, setError] = useState("");
+  // inputs data
+  const [communityName, setCommunityName] = useState("");
   const [communityType, setCommunityType] = useState("public");
+  // ui
+  const [loading, setLoading] = useState(false);
 
-  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCommunityName(e.target.value);
-    setCharsRemaining(21 - e.target.value.length);
+  const onNameChange = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    if (!format.test(value)) {
+      setError(
+        "Community names must be between 3-21 characters, and can only contain letters, numbers, or underscores."
+      );
+    } else {
+      setError("");
+    }
+    setCommunityName(value);
+    setCharsRemaining(21 - value.length);
   };
+
+  async function handleCreateCommunity(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    if (!format.test(communityName)) {
+      return setError(
+        "Community names must be between 3-21 characters, and can only contain letters, numbers, or underscores."
+      );
+    }
+    setLoading(true);
+
+    try {
+      if (user) {
+        const communityDocRef = doc(firestore, "communities", communityName);
+
+        await runTransaction(firestore, async (transaction: Transaction) => {
+          const communityDoc = await transaction.get(communityDocRef);
+          if (communityDoc.exists()) {
+            throw new Error(`Sorry, r/${communityName} is taken. Try another.`);
+          }
+
+          // Create the community
+          transaction.set(communityDocRef, {
+            creatorId: user.uid,
+            createdAt: serverTimestamp(),
+            numberOfMembers: 1,
+            privacyType: communityType,
+          });
+
+          // Add the community to the user
+          transaction.set(
+            doc(
+              firestore,
+              `users/${user.uid}/communitySnippets`,
+              communityName
+            ),
+            {
+              communityName,
+              // TO_DO make this be a date type & make it (null | Date) type
+              isMod: true,
+            }
+          );
+        });
+      } else {
+        throw new Error("Please Log In first");
+      }
+    } catch (error: any) {
+      console.log(error);
+      setError(error.message);
+    }
+
+    setLoading(false);
+  }
 
   return (
     <>
@@ -76,6 +152,7 @@ const CreateCommunityModal = ({ open, onClose }: Props) => {
                   <Input
                     type="text"
                     maxLength={21}
+                    minLength={3}
                     placeholder="Your Community name"
                     value={communityName}
                     onChange={onNameChange}
@@ -87,6 +164,9 @@ const CreateCommunityModal = ({ open, onClose }: Props) => {
                   pt={2}
                 >
                   {charsRemaining} Characters remaining
+                </Text>
+                <Text color="red" fontSize="9pt" pt={1}>
+                  {error}
                 </Text>
               </Box>
               {/* End Community Name */}
@@ -145,13 +225,23 @@ const CreateCommunityModal = ({ open, onClose }: Props) => {
               {/* End Community Type */}
             </ModalBody>
           </Box>
-
+          {/*  */}
           {/* Start Footer */}
           <ModalFooter bg="gray.100" borderRadius={"inherit"}>
-            <Button mr={2} h="30px" onClick={onClose} variant="outline">
+            <Button
+              mr={2}
+              h="30px"
+              onClick={onClose}
+              variant="outline"
+              isDisabled={loading}
+            >
               Cancel
             </Button>
-            <Button h="30px" onClick={() => {}}>
+            <Button
+              h="30px"
+              onClick={handleCreateCommunity}
+              isLoading={loading}
+            >
               Create Community
             </Button>
           </ModalFooter>
