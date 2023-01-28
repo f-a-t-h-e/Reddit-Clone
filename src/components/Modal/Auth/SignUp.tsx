@@ -1,11 +1,13 @@
 import { Button, Flex, Input, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 
 import { authModalState } from "../../../atoms/authModalAtom";
-import { auth } from "../../../firebase/clientApp";
+import { auth, firestore } from "../../../firebase/clientApp";
 import { FIREBASE_ERRORS } from "../../../firebase/errors";
+import { User } from "firebase/auth";
+import { addDoc, collection, doc, getDoc, setDoc } from "firebase/firestore";
 
 type Props = {};
 
@@ -18,8 +20,20 @@ const SignUp = (props: Props) => {
     confirmPassword: "",
   });
   const [formError, setFormError] = useState("");
-  const [createUserWithEmailAndPassword, user, loading, firebaseError] =
-    useCreateUserWithEmailAndPassword(auth);
+  const [
+    createUserWithEmailAndPassword,
+    userCred,
+    firebaseLoading,
+    firebaseError,
+  ] = useCreateUserWithEmailAndPassword(auth);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    {
+      firebaseLoading !== loading && setLoading(firebaseLoading);
+    }
+    // TO_DO try improving this
+  }, [firebaseLoading, loading]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSignUpForm((prev) => ({
@@ -41,6 +55,26 @@ const SignUp = (props: Props) => {
     }
     createUserWithEmailAndPassword(signUpForm.email, signUpForm.password);
   };
+
+  // TO_DO remove this after building the backend
+  const createUserDoc = async (user: User) => {
+    setLoading(true);
+
+    try {
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      await setDoc(userDocRef, JSON.parse(JSON.stringify(user)));
+    } catch (error: any) {
+      console.log(error);
+      setFormError(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (userCred) {
+      createUserDoc(userCred.user);
+    }
+  }, [userCred]);
 
   return (
     <form onSubmit={onSubmit}>
