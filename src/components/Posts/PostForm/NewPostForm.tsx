@@ -106,13 +106,13 @@ const NewPostForm: React.FC<NewPostFormProps> = ({
         // add the imageUrl to its post
         await updateDoc(postDocRef, { imageURL: downloadURL });
       }
+      router.back();
     } catch (error) {
       console.log("createPost error", error);
       setError("Something went wrong, please try again later.");
     }
 
     setLoading(false);
-    router.back();
   };
 
   const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
