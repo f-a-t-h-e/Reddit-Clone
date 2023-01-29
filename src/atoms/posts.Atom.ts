@@ -12,6 +12,7 @@ export interface IPost {
   voteStatus: number;
   imageURL?: string;
   communityImageURL?: string;
+  // NOTE : You can don't need to worry about craetedAt being null because you will use a server & will validate
   createdAt: Timestamp;
 }
 
