@@ -27,7 +27,7 @@ import type { IPost } from "@/atoms/posts.Atom";
 type Props = {
   post: IPost;
   userIsAuther: boolean;
-  userVoteValue?: boolean;
+  userVoteValue?: 1 | -1 | 0;
   onVote: () => {};
   onPostDelete: () => {};
   onSelectedPost: () => {};
@@ -42,7 +42,45 @@ const PostItem = ({
   userVoteValue,
 }: Props) => {
   return (
-    <Flex border="1px solid" bg="white">
+    <Flex
+      border="1px solid"
+      bg="white"
+      borderColor="gray.300"
+      borderRadius={4}
+      _hover={{
+        borderColor: "gray.500",
+      }}
+      cursor="pointer"
+      onClick={() => onSelectedPost}
+    >
+      <Flex
+        direction="column"
+        align="center"
+        bg="gray.100"
+        p={2}
+        w="40px"
+        borderRadius={4}
+      >
+        <Icon
+          as={
+            userVoteValue === 1 ? IoArrowUpCircleSharp : IoArrowUpCircleOutline
+          }
+          color={userVoteValue === 1 ? "brand.100" : "gray.400"}
+          fontSize={22}
+          cursor="pointer"
+        />
+        <Text fontSize="9pt">{post.voteStatus}</Text>
+        <Icon
+          as={
+            userVoteValue === -1
+              ? IoArrowDownCircleSharp
+              : IoArrowDownCircleOutline
+          }
+          color={userVoteValue === -1 ? "#4379FF" : "gray.400"}
+          fontSize={22}
+          cursor="pointer"
+        />
+      </Flex>
       {post.title}
     </Flex>
   );
