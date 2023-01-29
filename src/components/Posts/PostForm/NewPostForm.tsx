@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Flex, Icon } from "@chakra-ui/react";
+import { Alert, AlertIcon, Flex, Icon } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import {
   addDoc,
@@ -13,13 +13,13 @@ import { useRouter } from "next/router";
 import { BiPoll } from "react-icons/bi";
 import { BsLink45Deg, BsMic } from "react-icons/bs";
 import { IoDocumentText, IoImageOutline } from "react-icons/io5";
-import { firestore, storage } from "../../../firebase/clientApp";
+import { firestore, storage } from "@/firebase/clientApp";
 import TabItem from "./TabItem";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import TextInputs from "./TextInputs";
 import ImageUpload from "./ImageUpload";
 import { IconType } from "react-icons";
-import { IPost } from "../../../atoms/posts.Atom";
+import { IPost } from "@/atoms/posts.Atom";
 
 const formTabs = [
   {
@@ -168,6 +168,12 @@ const NewPostForm: React.FC<NewPostFormProps> = ({
           />
         )}
       </Flex>
+      {error && (
+        <Alert status="error" borderRadius={4}>
+          <AlertIcon />
+          {error}
+        </Alert>
+      )}
     </Flex>
   );
 };
