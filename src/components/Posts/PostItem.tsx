@@ -41,6 +41,7 @@ const PostItem = ({
   userIsAuther,
   userVoteValue,
 }: Props) => {
+  const [isImageLoading, setIsImageLoading] = useState(true);
   return (
     <Flex
       border="1px solid"
@@ -97,7 +98,16 @@ const PostItem = ({
           {post.imageURL && (
             <Flex justify="center" align="center" p={2}>
               {/* TO_DO : make this alt dynamic */}
-              <Image src={post.imageURL} alt={"post image"} />
+              {isImageLoading && (
+                <Skeleton h="200px" w="100%" borderRadius={4} />
+              )}
+              <Image
+                src={post.imageURL}
+                alt={"post image"}
+                // TO_DO : "this is to prevent flashing when the image gets loaded ?"
+                display={isImageLoading ? "none" : "unset"}
+                onLoad={() => setIsImageLoading(false)}
+              />
             </Flex>
           )}
         </Stack>
