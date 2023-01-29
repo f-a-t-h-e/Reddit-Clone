@@ -48,23 +48,25 @@ export interface ITabItem {
 }
 
 type NewPostFormProps = {
-  communityId: string;
-  communityImageURL?: string;
-  user: User;
+  // communityId: string;
+  // communityImageURL?: string;
+  // user: User;
 };
 
-const NewPostForm: React.FC<NewPostFormProps> = ({
-  communityId,
-  communityImageURL,
-  user,
-}) => {
+const NewPostForm: React.FC<NewPostFormProps> = (
+  {
+    // communityId,
+    // communityImageURL,
+    // user,
+  }
+) => {
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
   const [textInputs, setTextInputs] = useState({
     title: "",
     body: "",
   });
 
-  const [selectedFile, setSelectedFile] = useState<string>();
+  const [selectedFile, setSelectedFile] = useState<string>("");
   const selectFileRef = useRef<HTMLInputElement>(null);
 
   const [loading, setLoading] = useState(false);
