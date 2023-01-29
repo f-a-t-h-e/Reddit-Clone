@@ -77,6 +77,13 @@ const CreateCommunityModal = ({ open, onClose }: Props) => {
         const communityDocRef = doc(firestore, "communities", communityName);
 
         await runTransaction(firestore, async (transaction: Transaction) => {
+          const firebaseUserState = await transaction.get(
+            doc(firestore, "users", user.uid)
+          );
+          if (!firebaseUserState.exists()) {
+            throw new Error("Session ended please Log In first");
+          }
+
           const communityDoc = await transaction.get(communityDocRef);
           if (communityDoc.exists()) {
             throw new Error(`Sorry, r/${communityName} is taken. Try another.`);
@@ -98,8 +105,8 @@ const CreateCommunityModal = ({ open, onClose }: Props) => {
               communityName
             ),
             {
-              communityName,
-              // TO_DO make this be a date type & make it (null | Date) type
+              communityId: communityName,
+              // TO_DO make this be a (Date) type & make it (null | Date) type
               isMod: true,
             }
           );
