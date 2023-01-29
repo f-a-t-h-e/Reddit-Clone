@@ -1,6 +1,6 @@
 import { User } from "firebase/auth";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Community } from "@/atoms/communities.Atom";
 import { auth, firestore } from "@/firebase/clientApp";
 import usePosts from "@/hooks/usePosts";
@@ -8,6 +8,7 @@ import { IPost } from "../../atoms/posts.Atom";
 import PostItem from "./PostItem";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Stack } from "@chakra-ui/react";
+import PostLoader from "./PostLoader";
 
 type Props = {
   communityData: Community;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 const PostsFeed = ({ communityData }: Props) => {
+  const [loading, setLoading] = useState(false);
   const [user] = useAuthState(auth);
   const {
     postStateValue,
@@ -25,6 +27,7 @@ const PostsFeed = ({ communityData }: Props) => {
   } = usePosts();
 
   const getPosts = async () => {
+    setLoading(true);
     try {
       const postsQuery = query(
         collection(firestore, "posts"),
@@ -38,6 +41,7 @@ const PostsFeed = ({ communityData }: Props) => {
     } catch (error) {
       console.log(error);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -45,19 +49,25 @@ const PostsFeed = ({ communityData }: Props) => {
   }, []);
 
   return (
-    <Stack>
-      {postStateValue.posts.map((post, i) => (
-        <PostItem
-          key={i}
-          userIsAuther={!!user && post.authorId === user.uid}
-          post={post}
-          onPostDelete={onPostDelete}
-          onVote={onVote}
-          onSelectedPost={onSelectedPost}
-          userVoteValue={undefined}
-        />
-      ))}
-    </Stack>
+    <>
+      {loading ? (
+        <PostLoader />
+      ) : (
+        <Stack>
+          {postStateValue.posts.map((post, i) => (
+            <PostItem
+              key={i}
+              userIsAuther={!!user && post.authorId === user.uid}
+              post={post}
+              onPostDelete={onPostDelete}
+              onVote={onVote}
+              onSelectedPost={onSelectedPost}
+              userVoteValue={undefined}
+            />
+          ))}
+        </Stack>
+      )}
+    </>
   );
 };
 
