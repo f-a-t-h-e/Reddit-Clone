@@ -6,9 +6,17 @@ const usePosts = () => {
 
   const onVote = async () => {};
   const onPostDelete = async () => {};
+  const onSelectedPost = async () => {};
   const getCommunityPostVotes = async () => {};
 
-  return { postStateValue, setPostStateValue };
+  return {
+    postStateValue,
+    setPostStateValue,
+    onVote,
+    onPostDelete,
+    getCommunityPostVotes,
+    onSelectedPost,
+  };
 };
 
 export default usePosts;
