@@ -16,7 +16,7 @@ type Props = {
 };
 
 const PostsFeed = ({ communityData }: Props) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [user] = useAuthState(auth);
   const {
     postStateValue,
