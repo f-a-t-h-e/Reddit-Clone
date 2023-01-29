@@ -1,37 +1,47 @@
-import { Button, Flex, Input, Stack, Textarea } from "@chakra-ui/react";
 import React from "react";
-import type { IPostTabProps } from "../../types";
+import { Stack, Input, Textarea, Flex, Button } from "@chakra-ui/react";
 
-const PostTab = ({
+type TextInputsProps = {
+  textInputs: {
+    title: string;
+    body: string;
+  };
+  onChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  handleCreatePost: () => void;
+  loading: boolean;
+};
+
+const TextInputs: React.FC<TextInputsProps> = ({
+  textInputs,
   onChange,
   handleCreatePost,
   loading,
-  inputs,
-}: IPostTabProps) => {
+}) => {
   return (
-    <Stack spacing={3} w="100%">
+    <Stack spacing={3} width="100%">
       <Input
         name="title"
+        value={textInputs.title}
+        onChange={onChange}
+        _placeholder={{ color: "gray.500" }}
+        _focus={{
+          outline: "none",
+          bg: "white",
+          border: "1px solid",
+          borderColor: "black",
+        }}
         fontSize="10pt"
         borderRadius={4}
         placeholder="Title"
-        _placeholder={{ color: "gray.500" }}
-        _focus={{
-          outline: "none",
-          bg: "white",
-          border: "1px solid",
-          borderColor: "black",
-        }}
-        //
-        value={inputs.title}
-        onChange={onChange}
       />
       <Textarea
         name="body"
+        value={textInputs.body}
+        onChange={onChange}
         fontSize="10pt"
-        borderRadius={4}
         placeholder="Text (optional)"
-        h="100px"
         _placeholder={{ color: "gray.500" }}
         _focus={{
           outline: "none",
@@ -39,17 +49,15 @@ const PostTab = ({
           border: "1px solid",
           borderColor: "black",
         }}
-        //
-        value={inputs.body}
-        onChange={onChange}
+        height="100px"
       />
-      <Flex justify="end">
+      <Flex justify="flex-end">
         <Button
           height="34px"
           padding="0px 30px"
-          isDisabled={!inputs.title}
-          onClick={handleCreatePost}
+          disabled={!textInputs.title}
           isLoading={loading}
+          onClick={handleCreatePost}
         >
           Post
         </Button>
@@ -57,5 +65,4 @@ const PostTab = ({
     </Stack>
   );
 };
-
-export default PostTab;
+export default TextInputs;
