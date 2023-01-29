@@ -26,7 +26,7 @@ const CreatePostLink = (props: Props) => {
 
     const { communityId } = router.query;
     if (communityId) {
-      router.push(`/r/${router.query.community}/submit`);
+      router.push(`/r/${router.query.communityId}/submit`);
       return;
     }
   };
