@@ -29,7 +29,7 @@ type Props = {
   userIsAuther: boolean;
   userVoteValue?: 1 | -1 | 0;
   onVote: () => {};
-  onPostDelete: (postId: IPost["id"]) => {};
+  onPostDelete: (postId: IPost["id"]) => Promise<boolean>;
   onSelectedPost: () => {};
 };
 
@@ -42,6 +42,21 @@ const PostItem = ({
   userVoteValue,
 }: Props) => {
   const [isImageLoading, setIsImageLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const handleDelete = async () => {
+    try {
+      const success = await onPostDelete(post.id);
+      if (!success) {
+        throw new Error("Couldn't delete the post...");
+      }
+    } catch (error: any) {
+      console.log("handleDelete at PostItem component ", error);
+
+      setError(error.message || error);
+    }
+  };
+
   return (
     <Flex
       border="1px solid"
@@ -54,6 +69,7 @@ const PostItem = ({
       cursor="pointer"
       onClick={() => onSelectedPost}
     >
+      {/* start VOTE */}
       <Flex
         direction="column"
         align="center"
@@ -82,6 +98,7 @@ const PostItem = ({
           cursor="pointer"
         />
       </Flex>
+      {/* end VOTE */}
       <Flex direction="column" width="100%">
         <Stack spacing={1} p="10px 10px">
           <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
@@ -111,6 +128,7 @@ const PostItem = ({
             </Flex>
           )}
         </Stack>
+        {/* start REACTIONS */}
         <Flex ml="1" mb="0.5" color="gray.500">
           <Flex
             align="center"
@@ -149,13 +167,14 @@ const PostItem = ({
               borderRadius={4}
               _hover={{ bg: "gray.200" }}
               cursor="pointer"
-              onClick={() => onPostDelete(post.id)}
+              onClick={() => handleDelete()}
             >
               <Icon as={AiOutlineDelete} mr="2" />
               <Text fontSize="9pt">Delete</Text>
             </Flex>
           )}
         </Flex>
+        {/* end REACTIONS */}
       </Flex>
     </Flex>
   );
