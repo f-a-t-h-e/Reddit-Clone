@@ -6,6 +6,7 @@ import {
   collection,
   doc,
   serverTimestamp,
+  Timestamp,
   updateDoc,
 } from "firebase/firestore";
 import { useRouter } from "next/router";
@@ -18,6 +19,7 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import TextInputs from "./TextInputs";
 import ImageUpload from "./ImageUpload";
 import { IconType } from "react-icons";
+import { IPost } from "../../../atoms/posts.Atom";
 
 const formTabs = [
   {
@@ -48,18 +50,16 @@ export interface ITabItem {
 }
 
 type NewPostFormProps = {
+  user: User;
   // communityId: string;
   // communityImageURL?: string;
-  // user: User;
 };
 
-const NewPostForm: React.FC<NewPostFormProps> = (
-  {
-    // communityId,
-    // communityImageURL,
-    // user,
-  }
-) => {
+const NewPostForm: React.FC<NewPostFormProps> = ({
+  user,
+  // communityId,
+  // communityImageURL,
+}) => {
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
   const [textInputs, setTextInputs] = useState({
     title: "",
@@ -72,14 +72,47 @@ const NewPostForm: React.FC<NewPostFormProps> = (
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // const router = useRouter();
+  const router = useRouter();
   // const setPostItems = useSetRecoilState(postState);
 
   const handleCreatePost = async () => {
     setLoading(true);
+    const { communityId } = router.query;
     const { title, body } = textInputs;
+    // prepare new post
+    const newPost: IPost = {
+      authorId: user.uid,
+      authorName: user.displayName || user.email?.split("@")[0] || "Unknown",
+      body,
+      // TO_DO : fix this
+      communityId: communityId as string,
+      title,
+      numberOfComments: 0,
+      voteStatus: 0,
+      createdAt: serverTimestamp() as Timestamp,
+    };
+    try {
+      // get new ref to that post
+      const postDocRef = await addDoc(collection(firestore, "posts"), newPost);
+
+      // check if the user wanted to attach files
+      if (selectedFile) {
+        // get new ref to that file (image)
+        const imageRef = ref(storage, `posts/${postDocRef.id}/image`);
+        await uploadString(imageRef, selectedFile, "data_url");
+
+        const downloadURL = await getDownloadURL(imageRef);
+
+        // add the imageUrl to its post
+        await updateDoc(postDocRef, { imageURL: downloadURL });
+      }
+    } catch (error) {
+      console.log("createPost error", error);
+      setError("Something went wrong, please try again later.");
+    }
 
     setLoading(false);
+    router.back();
   };
 
   const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
