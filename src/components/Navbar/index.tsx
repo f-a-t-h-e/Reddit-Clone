@@ -17,6 +17,7 @@ function Navbar({}: Props) {
       height="46px"
       padding="6px 12px"
       minWidth="fit-content"
+      // TO_DO : NOTE : make this justify="end" to fix (too small screen width) issue
       justify="space-between"
     >
       {/* Logo */}
