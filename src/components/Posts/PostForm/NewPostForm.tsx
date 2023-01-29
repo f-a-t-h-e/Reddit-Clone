@@ -80,7 +80,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({
     const { communityId } = router.query;
     const { title, body } = textInputs;
     // prepare new post
-    const newPost: IPost = {
+    const newPost: Omit<IPost, "id"> = {
       authorId: user.uid,
       authorName: user.displayName || user.email?.split("@")[0] || "Unknown",
       body,
