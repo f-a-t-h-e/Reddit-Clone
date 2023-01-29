@@ -1,16 +1,8 @@
-import {
-  AddIcon,
-  ChevronDownIcon,
-  EditIcon,
-  ExternalLinkIcon,
-  HamburgerIcon,
-  RepeatIcon,
-} from "@chakra-ui/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Flex,
   Icon,
-  IconButton,
   Menu,
   MenuButton,
   MenuDivider,
@@ -21,21 +13,30 @@ import {
 import { signOut, User } from "firebase/auth";
 
 import { FaRedditSquare } from "react-icons/fa";
-import { VscAccount } from "react-icons/vsc";
 import { IoSparkles } from "react-icons/io5";
+import { VscAccount } from "react-icons/vsc";
 
+import { authModalState } from "@/atoms/authModalAtom";
+import { auth } from "@/firebase/clientApp";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineLogin, MdOutlineLogout } from "react-icons/md";
-import { auth } from "@/firebase/clientApp";
-import { useRecoilState } from "recoil";
-import { authModalState } from "@/atoms/authModalAtom";
+import { useResetRecoilState, useSetRecoilState } from "recoil";
+import { communityState } from "@/atoms/communities.Atom";
 
 type Props = {
   user?: User | null;
 };
 
 const UserMenu = ({ user }: Props) => {
-  const [authModal, setModalState] = useRecoilState(authModalState);
+  const setModalState = useSetRecoilState(authModalState);
+  // TO_DO Remove this, @/hooks/useCommunityData/()=>{}:useCommunityData/useEffect .
+  const resetCommunityState = useResetRecoilState(communityState);
+
+  const logOut = async () => {
+    await signOut(auth);
+    // TO_DO Remove this, @/hooks/useCommunityData/()=>{}:useCommunityData/useEffect .
+    resetCommunityState();
+  };
 
   return (
     <Menu>
@@ -91,7 +92,7 @@ const UserMenu = ({ user }: Props) => {
               _hover={{ bg: "blue.500", color: "white" }}
               icon={<MdOutlineLogout fontSize={20} />}
               command="⌘O"
-              onClick={() => signOut(auth)}
+              onClick={() => logOut()}
             >
               Log Out
             </MenuItem>
