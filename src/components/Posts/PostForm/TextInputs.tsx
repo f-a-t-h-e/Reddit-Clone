@@ -51,7 +51,7 @@ const TextInputs: React.FC<TextInputsProps> = ({
         }}
         height="100px"
       />
-      <Flex justify="flex-end">
+      <Flex justify="end">
         <Button
           height="34px"
           padding="0px 30px"
