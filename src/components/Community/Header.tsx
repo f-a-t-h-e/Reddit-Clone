@@ -1,17 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Community } from "@/atoms/communities.Atom";
-import { Box, Button, Flex, Icon, Image, Text } from "@chakra-ui/react";
+import { Button, Flex, Icon, Image, Text } from "@chakra-ui/react";
 import { FaReddit } from "react-icons/fa";
 import useCommunityData from "@/hooks/useCommunityData";
+import { useRouter } from "next/router";
 
 type Props = {
   communityData: Community;
 };
 
 const CommunityHeader = ({ communityData }: Props) => {
-  const { communityStateValue, onJoinOrLeaveCommunity, loading } =
+  const router = useRouter();
+  const { communityStateValue, onJoinOrLeaveCommunity, loading, isError } =
     useCommunityData();
-
+  useEffect(() => {
+    if (isError === "Community doesn't exist") {
+      // TO_DO : remove this with something better and more meaningful
+      router.reload();
+    }
+  }, [isError, router]);
   // will come from the community snippet (From a state)
   const isJoined = !!communityStateValue.mySnippets.find(
     ({ communityId }) => communityId === communityData.id
