@@ -9,7 +9,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
       <Navbar />
-      {children}
+      <div
+        style={{
+          minHeight: "calc(100vh - 46px)",
+          width: "100%",
+          backgroundColor: "black",
+        }}
+      >
+        {children}
+      </div>
     </>
   );
 };
