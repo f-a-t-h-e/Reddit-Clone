@@ -9,7 +9,6 @@ import { IoImageOutline } from "react-icons/io5";
 import { auth } from "@/firebase/clientApp";
 import { authModalState } from "@/atoms/authModalAtom";
 import { useSetRecoilState } from "recoil";
-// import useDirectory from "@/hooks/useDirectory";
 
 type Props = {};
 
@@ -19,7 +18,6 @@ const CreatePostLink = (props: Props) => {
   const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalState);
 
-  // const { toggleMenuOpen } = useDirectory();
   const onClick = () => {
     if (!user) {
       setAuthModalState((prev) => ({ ...prev, view: "login", open: true }));
@@ -31,8 +29,6 @@ const CreatePostLink = (props: Props) => {
       router.push(`/r/${router.query.community}/submit`);
       return;
     }
-    // Open directory menu to select community to post to
-    // toggleMenuOpen();
   };
 
   return (
