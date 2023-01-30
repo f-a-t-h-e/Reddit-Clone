@@ -12,7 +12,7 @@ const usePosts = () => {
     try {
       // Check if there is an image to remove it
       if (post.imageURL) {
-        const imageRef = ref(storage, `posts/${post.id}/imageURL`);
+        const imageRef = ref(storage, `posts/${post.id}/image`);
         await deleteObject(imageRef);
       }
 
@@ -24,6 +24,8 @@ const usePosts = () => {
         posts: prev.posts.filter(({ id }) => id !== post.id),
       }));
     } catch (error) {
+      console.log("🚀 ~ file: usePosts.ts:27 ~ onPostDelete ~ error", error);
+
       return false;
     }
     return true;
