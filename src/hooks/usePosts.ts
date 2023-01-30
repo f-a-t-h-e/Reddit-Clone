@@ -17,6 +17,13 @@ const usePosts = () => {
   const [user] = useAuthState(auth);
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
   // TO_DO : this is supposed to be handled from the server not here
+  /**
+   * This function implementation is temporary till adding server endpoints
+   * @param post the post to vote on
+   * @param voteValue the value of the button clicked
+   * @param communityId the community of that post
+   * @returns Promise<true> if success Promise<false> if failed or user is not logged in
+   */
   const onVote = async (
     post: IPost,
     voteValue: 1 | -1,
@@ -24,7 +31,7 @@ const usePosts = () => {
   ) => {
     if (!user) {
       // TO_DO : handle this
-      return;
+      return false;
     }
 
     try {
@@ -112,8 +119,10 @@ const usePosts = () => {
         posts: updatedPosts,
         postVotes: updatedPostVotes,
       }));
+      return true;
     } catch (error) {
       console.log("🚀 ~ file: usePosts.ts:32 ~ onVote ~ error", error);
+      return false;
     }
   };
   const onPostDelete = async (post: IPost): Promise<boolean> => {
