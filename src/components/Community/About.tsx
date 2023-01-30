@@ -10,11 +10,14 @@ import {
   Icon,
   Stack,
   Text,
+  Image,
 } from "@chakra-ui/react";
 import moment from "moment";
 import Link from "next/link";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../firebase/clientApp";
+import { auth } from "@/firebase/clientApp";
+import useSelectFile from "@/hooks/useSelectFile";
+import { FaReddit } from "react-icons/fa";
 
 type Props = {
   communityData: Community;
@@ -23,6 +26,8 @@ type Props = {
 const About = ({ communityData }: Props) => {
   const [user] = useAuthState(auth);
   const selectedFileRef = useRef(null);
+
+  const { onSelectFile, selectedFile, setSelectedFile } = useSelectFile();
   return (
     <Box pos="sticky" top="14px">
       <Flex
@@ -88,6 +93,22 @@ const About = ({ communityData }: Props) => {
                   >
                     Change Image
                   </Text>
+                  {communityData.imageURL ? (
+                    <Image
+                      borderRadius="full"
+                      boxSize="40px"
+                      src={communityData.imageURL}
+                      alt={communityData.id}
+                    />
+                  ) : (
+                    <Icon
+                      as={FaReddit}
+                      color="brand.100"
+                      borderRadius="full"
+                      boxSize="40px"
+                      bg="white"
+                    />
+                  )}
                 </Flex>
               </Stack>
             </>
