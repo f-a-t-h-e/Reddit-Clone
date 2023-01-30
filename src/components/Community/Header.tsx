@@ -35,11 +35,15 @@ const CommunityHeader = ({ communityData }: Props) => {
       p="16px"
     >
       <Flex w="95%" h="5rem" maxW="860px">
-        {communityData.imageURL ? (
+        {communityStateValue.currentCommunity?.imageURL ||
+        communityData.imageURL ? (
           <Image
             borderRadius="full"
             boxSize="66px"
-            src={communityData.imageURL}
+            src={
+              communityStateValue.currentCommunity?.imageURL ||
+              communityData.imageURL
+            }
             alt={communityData.id}
             color="blue.500"
             border="4px solid white"
