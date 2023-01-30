@@ -21,7 +21,7 @@ export interface IPostVote {
   id: string;
   postId: string;
   communityId: string;
-  voteValue: number;
+  voteValue: 1 | 0 | -1;
 }
 
 interface IPostState {
