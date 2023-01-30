@@ -35,7 +35,13 @@ const usePosts = () => {
 
       const batch = writeBatch(firestore);
       const updatedPost = { ...post };
-      const updatedPosts = [...postStateValue.posts];
+      let postIndex: number = -1;
+      const updatedPosts = postStateValue.posts.map((value, index) => {
+        if (value.id === updatedPost.id) {
+          postIndex = index;
+        }
+        return value;
+      });
       // Hint : This postVotes is related to the current user
       let updatedPostVotes = [...postStateValue.postVotes];
       let voteValueChange: 2 | 1 | -1 | -2 = voteValue;
@@ -99,6 +105,12 @@ const usePosts = () => {
       /**
        * start updating the state
        */
+      updatedPosts[postIndex] = updatedPost;
+      setPostStateValue((prev) => ({
+        ...prev,
+        posts: updatedPosts,
+        postVotes: updatedPostVotes,
+      }));
     } catch (error) {
       console.log("🚀 ~ file: usePosts.ts:32 ~ onVote ~ error", error);
     }
