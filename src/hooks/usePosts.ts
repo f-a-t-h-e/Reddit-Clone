@@ -16,6 +16,7 @@ import { IPost, IPostVote, postState } from "@/atoms/posts.Atom";
 import { Community, communityState } from "@/atoms/communities.Atom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCallback, useEffect } from "react";
+import { User } from "firebase/auth";
 
 const usePosts = () => {
   const [user] = useAuthState(auth);
@@ -154,7 +155,7 @@ const usePosts = () => {
   };
   const onSelectedPost = async () => {};
   const getCommunityPostVotes = useCallback(
-    async (communityId: Community["id"]) => {
+    async (user: User, communityId: Community["id"]) => {
       if (!user) {
         setPostStateValue((prev) => ({
           ...prev,
@@ -187,13 +188,25 @@ const usePosts = () => {
         return false;
       }
     },
-    [setPostStateValue, user]
+    [setPostStateValue]
   );
 
   useEffect(() => {
-    if (!currentCommunity) return;
-    getCommunityPostVotes(currentCommunity.id);
-  }, [currentCommunity, getCommunityPostVotes]);
+    if (!user || !currentCommunity) {
+      // DON'T Use setPostStateValue till you make sure it won't reinstantiate getCommunityPostVotes
+      return;
+    }
+    getCommunityPostVotes(user, currentCommunity.id);
+  }, [currentCommunity, getCommunityPostVotes, user]);
+  useEffect(() => {
+    if (!user) {
+      setPostStateValue((prev) => ({
+        ...prev,
+        postVotes: [],
+      }));
+    }
+  }, [user]);
+
   return {
     postStateValue,
     setPostStateValue,
