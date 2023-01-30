@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { deleteObject, ref } from "firebase/storage";
 import {
   collection,
@@ -17,11 +17,13 @@ import { Community, communityState } from "@/atoms/communities.Atom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCallback, useEffect } from "react";
 import { User } from "firebase/auth";
+import { authModalState } from "../atoms/authModalAtom";
 
 const usePosts = () => {
   const [user] = useAuthState(auth);
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
   const { currentCommunity } = useRecoilValue(communityState);
+  const setAuthModalState = useSetRecoilState(authModalState);
   // TO_DO : this is supposed to be handled from the server not here
   /**
    * This function implementation is temporary till adding server endpoints
@@ -36,7 +38,11 @@ const usePosts = () => {
     communityId: Community["id"]
   ) => {
     if (!user) {
-      // TO_DO : handle this
+      setAuthModalState((prev) => ({
+        ...prev,
+        open: true,
+        view: "login",
+      }));
       return false;
     }
 
