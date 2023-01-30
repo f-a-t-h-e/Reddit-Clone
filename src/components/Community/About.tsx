@@ -16,9 +16,11 @@ import {
 import moment from "moment";
 import Link from "next/link";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/clientApp";
+import { auth, firestore, storage } from "@/firebase/clientApp";
 import useSelectFile from "@/hooks/useSelectFile";
 import { FaReddit } from "react-icons/fa";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { doc, updateDoc } from "firebase/firestore";
 
 type Props = {
   communityData: Community;
@@ -47,11 +49,17 @@ const About = ({ communityData }: Props) => {
     event: React.MouseEvent<HTMLParagraphElement, MouseEvent>
   ) => {
     setUploadingImage((prev) => ({ ...prev, yes: true, loading: true }));
-    /**
-     *
-     * UPLOAd TO STORAGE
-     *
-     */
+    try {
+      const imageRef = ref(storage, `community/${communityData.id}/imageURL`);
+      // data_url is coming from the format that we told the file reader to read the files in
+      await uploadString(imageRef, selectedFile, "data_url");
+      const downloadURL = await getDownloadURL(imageRef);
+      await updateDoc(doc(firestore, `comunities/${communityData.id}`), {
+        imageURL: downloadURL,
+      });
+    } catch (error) {
+      console.log("🚀 ~ file: About.tsx:53 ~ About ~ error", error);
+    }
     setSelectedFile("");
     setUploadingImage((prev) => ({ ...prev, yes: false, loading: false }));
   };
