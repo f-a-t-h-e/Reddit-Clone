@@ -108,6 +108,8 @@ const NewPostForm: React.FC<NewPostFormProps> = ({
         // add the imageUrl to its post
         await updateDoc(postDocRef, { imageURL: downloadURL });
       }
+      // TO_DO : make diffrent local states for each file uploader
+      setSelectedFile("");
       router.back();
     } catch (error) {
       console.log("createPost error", error);
