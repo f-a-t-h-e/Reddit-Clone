@@ -19,6 +19,7 @@ export interface CommunitySnippet {
 
 interface CommunityState {
   mySnippets: CommunitySnippet[];
+  currentCommunity?: Community;
   // visitedCommunities:
 }
 
