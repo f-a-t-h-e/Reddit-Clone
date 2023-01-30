@@ -119,6 +119,7 @@ const About = ({ communityData }: Props) => {
           </Flex>
           {/* end CreatedAt */}
           {/* you can use router.query.communityId */}
+          {/* TO_DO : Add a hadler function to check for the user first */}
           <Link href={`/r/${communityData.id}/submit`}>
             <Button mt={3} h="30px" w="100%">
               Create Post
