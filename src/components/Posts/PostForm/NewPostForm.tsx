@@ -20,6 +20,7 @@ import TextInputs from "./TextInputs";
 import ImageUpload from "./ImageUpload";
 import { IconType } from "react-icons";
 import { IPost } from "@/atoms/posts.Atom";
+import useSelectFile from "../../../hooks/useSelectFile";
 
 const formTabs = [
   {
@@ -60,13 +61,14 @@ const NewPostForm: React.FC<NewPostFormProps> = ({
   // communityId,
   // communityImageURL,
 }) => {
+  const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
+
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
   const [textInputs, setTextInputs] = useState({
     title: "",
     body: "",
   });
 
-  const [selectedFile, setSelectedFile] = useState<string>("");
   const selectFileRef = useRef<HTMLInputElement>(null);
 
   const [loading, setLoading] = useState(false);
@@ -115,19 +117,6 @@ const NewPostForm: React.FC<NewPostFormProps> = ({
     setLoading(false);
   };
 
-  const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const reader = new FileReader();
-    if (event.target.files?.[0]) {
-      reader.readAsDataURL(event.target.files[0]);
-    }
-
-    reader.onload = (readerEvent) => {
-      if (readerEvent.target?.result) {
-        setSelectedFile(readerEvent.target?.result as string);
-      }
-    };
-  };
-
   const onTextChange = ({
     target: { name, value },
   }: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -164,7 +153,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({
             setSelectedFile={setSelectedFile}
             setSelectedTab={setSelectedTab}
             selectFileRef={selectFileRef}
-            onSelectImage={onSelectImage}
+            onSelectImage={onSelectFile}
           />
         )}
       </Flex>
