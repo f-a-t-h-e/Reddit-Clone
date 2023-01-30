@@ -124,15 +124,30 @@ const usePosts = () => {
 
       // comit updates to Firestore
       await batch.commit();
+
       /**
        * start updating the state
        */
+
       updatedPosts[postIndex] = updatedPost;
-      setPostStateValue((prev) => ({
-        ...prev,
-        posts: updatedPosts,
-        postVotes: updatedPostVotes,
-      }));
+      // handle selectedPost condition
+      if (
+        postStateValue.selectedPost &&
+        postStateValue.selectedPost.id === post.id
+      ) {
+        setPostStateValue((prev) => ({
+          ...prev,
+          selectedPost: updatedPost,
+          posts: updatedPosts,
+          postVotes: updatedPostVotes,
+        }));
+      } else {
+        setPostStateValue((prev) => ({
+          ...prev,
+          posts: updatedPosts,
+          postVotes: updatedPostVotes,
+        }));
+      }
       return true;
     } catch (error) {
       console.log("🚀 ~ file: usePosts.ts:32 ~ onVote ~ error", error);
