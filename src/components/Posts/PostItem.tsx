@@ -25,12 +25,17 @@ import {
 } from "react-icons/io5";
 
 import type { IPost } from "@/atoms/posts.Atom";
+import { Community } from "@/atoms/communities.Atom";
 
 type Props = {
   post: IPost;
   userIsAuther: boolean;
   userVoteValue?: 1 | -1 | 0;
-  onVote: () => {};
+  onVote: (
+    post: IPost,
+    voteValue: 1 | -1,
+    communityId: Community["id"]
+  ) => Promise<boolean>;
   onPostDelete: (post: IPost) => Promise<boolean>;
   onSelectedPost: () => {};
 };
