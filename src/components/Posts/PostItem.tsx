@@ -29,7 +29,7 @@ type Props = {
   userIsAuther: boolean;
   userVoteValue?: 1 | -1 | 0;
   onVote: () => {};
-  onPostDelete: (postId: IPost["id"]) => Promise<boolean>;
+  onPostDelete: (post: IPost) => Promise<boolean>;
   onSelectedPost: () => {};
 };
 
@@ -46,7 +46,7 @@ const PostItem = ({
 
   const handleDelete = async () => {
     try {
-      const success = await onPostDelete(post.id);
+      const success = await onPostDelete(post);
       if (!success) {
         throw new Error("Couldn't delete the post...");
       }
