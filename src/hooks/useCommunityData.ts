@@ -15,6 +15,7 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { authModalState } from "@/atoms/authModalAtom";
+import { User } from "firebase/auth";
 
 const useCommunityData = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
@@ -128,11 +129,8 @@ const useCommunityData = () => {
     setLoading(false);
   };
 
-  const getMySnippets = async () => {
+  const getMySnippets = async (user: User) => {
     try {
-      if (!user) {
-        return setCommunityStateValue({ mySnippets: [] });
-      }
       const snippetDocs = await getDocs(
         collection(firestore, `users/${user.uid}/communitySnippets`)
       );
@@ -150,7 +148,14 @@ const useCommunityData = () => {
 
   useEffect(() => {
     setLoading(true);
-    getMySnippets();
+    if (!user) {
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        mySnippets: [],
+      }));
+    } else {
+      getMySnippets(user);
+    }
     setLoading(false);
     // TO_DO : fix this properly
   }, [user]);
