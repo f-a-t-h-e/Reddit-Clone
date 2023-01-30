@@ -21,7 +21,7 @@ import useSelectFile from "@/hooks/useSelectFile";
 import { FaReddit } from "react-icons/fa";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 type Props = {
   communityData: Community;
@@ -31,7 +31,8 @@ const About = ({ communityData }: Props) => {
   // hooks
   const [user] = useAuthState(auth);
   const { onSelectFile, selectedFile, setSelectedFile } = useSelectFile();
-  const setCommunityStateValue = useSetRecoilState(communityState);
+  const [communityStateValue, setCommunityStateValue] =
+    useRecoilState(communityState);
 
   // states
   const [uploadingImage, setUploadingImage] = useState({
@@ -146,12 +147,17 @@ const About = ({ communityData }: Props) => {
                     ref={selectFileRef}
                     onChange={handleSelectImage}
                   />
-                  {communityData.imageURL ||
-                  (uploadingImage.yes && !uploadingImage.loading) ? (
+                  {communityStateValue.currentCommunity?.imageURL ||
+                  communityData.imageURL ||
+                  uploadingImage.yes ? (
                     <Image
                       borderRadius="full"
                       boxSize="40px"
-                      src={communityData.imageURL || selectedFile}
+                      src={
+                        (uploadingImage.yes && selectedFile) ||
+                        communityStateValue.currentCommunity?.imageURL ||
+                        communityData.imageURL
+                      }
                       alt={communityData.id}
                     />
                   ) : (
