@@ -30,7 +30,7 @@ import { Community } from "@/atoms/communities.Atom";
 type Props = {
   post: IPost;
   userIsAuther: boolean;
-  userVoteValue?: 1 | -1 | 0;
+  userVoteValue: 1 | -1 | 0;
   onVote: (
     post: IPost,
     voteValue: 1 | -1,
@@ -95,6 +95,7 @@ const PostItem = ({
           color={userVoteValue === 1 ? "brand.100" : "gray.400"}
           fontSize={22}
           cursor="pointer"
+          onClick={() => onVote(post, 1, post.communityId)}
         />
         <Text fontSize="9pt">{post.voteStatus}</Text>
         <Icon
@@ -106,6 +107,7 @@ const PostItem = ({
           color={userVoteValue === -1 ? "#4379FF" : "gray.400"}
           fontSize={22}
           cursor="pointer"
+          onClick={() => onVote(post, -1, post.communityId)}
         />
       </Flex>
       {/* end VOTE */}
