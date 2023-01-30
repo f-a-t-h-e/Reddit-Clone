@@ -11,7 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import moment from "moment";
-import { NextRouter } from "next/router";
+import Router, { NextRouter, useRouter } from "next/router";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsChat, BsDot } from "react-icons/bs";
 import { FaReddit } from "react-icons/fa";
@@ -51,7 +51,8 @@ const PostItem = ({
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [error, setError] = useState("");
   const [isDeletionLoading, setIsDeletionLoading] = useState(false);
-  const [singlePostPage, setSinglePostPage] = useState(false);
+  const [singlePostPage, setSinglePostPage] = useState(!onSelectedPost);
+  const router = useRouter();
 
   const handleDelete = useCallback(
     async (
@@ -71,6 +72,9 @@ const PostItem = ({
         if (!success) {
           throw new Error("Couldn't delete the post...");
         }
+        if (singlePostPage) {
+          router.push(`/r/${post.communityId}`);
+        }
       } catch (error: any) {
         console.log("handleDelete at PostItem component ", error);
 
@@ -78,7 +82,7 @@ const PostItem = ({
       }
       setIsDeletionLoading(false);
     },
-    []
+    [router, singlePostPage]
   );
 
   const handleVote = useCallback(
