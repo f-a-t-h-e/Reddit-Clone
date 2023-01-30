@@ -68,6 +68,17 @@ const PostItem = ({
     setIsDeletionLoading(false);
   };
 
+  const handleVote = async (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    {
+      communityId,
+      post,
+      voteValue,
+    }: { post: IPost; voteValue: 1 | -1; communityId: Community["id"] }
+  ) => {
+    event.stopPropagation();
+    onVote(post, voteValue, communityId);
+  };
   return (
     <Flex
       border="1px solid"
@@ -97,7 +108,9 @@ const PostItem = ({
           color={userVoteValue === 1 ? "brand.100" : "gray.400"}
           fontSize={22}
           cursor="pointer"
-          onClick={() => onVote(post, 1, post.communityId)}
+          onClick={(e) =>
+            handleVote(e, { post, voteValue: 1, communityId: post.communityId })
+          }
         />
         <Text fontSize="9pt">{post.voteStatus}</Text>
         <Icon
@@ -109,7 +122,13 @@ const PostItem = ({
           color={userVoteValue === -1 ? "#4379FF" : "gray.400"}
           fontSize={22}
           cursor="pointer"
-          onClick={() => onVote(post, -1, post.communityId)}
+          onClick={(e) =>
+            handleVote(e, {
+              post,
+              voteValue: -1,
+              communityId: post.communityId,
+            })
+          }
         />
       </Flex>
       {/* end VOTE */}
