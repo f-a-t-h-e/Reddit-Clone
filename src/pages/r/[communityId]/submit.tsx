@@ -22,6 +22,7 @@ const SubmitPostPage = ({}: Props) => {
     if (!communityStateValue.currentCommunity) {
       router.push("/r/");
     } else if (!user && communityStateValue.currentCommunity.id) {
+      // TO_DO : Open authModal instead
       router.push(`/r/${communityStateValue.currentCommunity.id}`);
     }
   }, [user, communityStateValue.currentCommunity, router]);
