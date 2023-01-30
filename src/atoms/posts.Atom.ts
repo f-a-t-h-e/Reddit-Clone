@@ -12,9 +12,10 @@ export interface IPost {
   voteStatus: number;
   imageURL?: string;
   communityImageURL?: string;
-  // NOTE : You can don't need to worry about craetedAt being null because you will use a server & will validate
+  // NOTE : You can avoid the need to worry about craetedAt being null because you will use a server & will validate
   createdAt: Timestamp;
 }
+// TO_DO : Rename to IUserPostsVotes to avoid misunderstanding
 // TO_DO : Check adding this to the IPost in the client side only
 export interface IPostVote {
   id: string;
