@@ -29,7 +29,8 @@ const CommunityPage = ({ communityData }: Props) => {
   if (!communityData) {
     return <CommunityNotFound />;
   }
-
+  // NOTE : We are using communityData instead of currentCommunity
+  // on the community state BECAUSE it uses SSR
   return (
     <>
       <CommunityHeader communityData={communityData} />
