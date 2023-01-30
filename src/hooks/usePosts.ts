@@ -1,21 +1,26 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { deleteObject, ref } from "firebase/storage";
 import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
   increment,
+  query,
+  where,
   writeBatch,
 } from "firebase/firestore";
 
 import { auth, firestore, storage } from "@/firebase/clientApp";
 import { IPost, IPostVote, postState } from "@/atoms/posts.Atom";
-import { Community } from "@/atoms/communities.Atom";
+import { Community, communityState } from "@/atoms/communities.Atom";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useCallback, useEffect } from "react";
 
 const usePosts = () => {
   const [user] = useAuthState(auth);
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
+  const { currentCommunity } = useRecoilValue(communityState);
   // TO_DO : this is supposed to be handled from the server not here
   /**
    * This function implementation is temporary till adding server endpoints
@@ -148,8 +153,47 @@ const usePosts = () => {
     return true;
   };
   const onSelectedPost = async () => {};
-  const getCommunityPostVotes = async () => {};
+  const getCommunityPostVotes = useCallback(
+    async (communityId: Community["id"]) => {
+      if (!user) {
+        setPostStateValue((prev) => ({
+          ...prev,
+          postVotes: [],
+        }));
+        return true;
+      }
+      try {
+        const userPostsVotesQuery = query(
+          collection(firestore, "users", `${user.uid}/postVotes`),
+          where("communityId", "==", communityId)
+        );
+        const userPostsVotesDocs = await getDocs(userPostsVotesQuery);
 
+        const userPostsVotes = userPostsVotesDocs.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as IPostVote[];
+
+        setPostStateValue((prev) => ({
+          ...prev,
+          postVotes: userPostsVotes,
+        }));
+        return true;
+      } catch (error) {
+        console.log(
+          "🚀 ~ file: usePosts.ts:162 ~ getCommunityPostVotes ~ error",
+          error
+        );
+        return false;
+      }
+    },
+    [setPostStateValue, user]
+  );
+
+  useEffect(() => {
+    if (!currentCommunity) return;
+    getCommunityPostVotes(currentCommunity.id);
+  }, [currentCommunity, getCommunityPostVotes]);
   return {
     postStateValue,
     setPostStateValue,
