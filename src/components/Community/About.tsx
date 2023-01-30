@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiCakeLine } from "react-icons/ri";
-import { Community } from "@/atoms/communities.Atom";
+import { Community, communityState } from "@/atoms/communities.Atom";
 import {
   Box,
   Button,
@@ -21,6 +21,7 @@ import useSelectFile from "@/hooks/useSelectFile";
 import { FaReddit } from "react-icons/fa";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
+import { useSetRecoilState } from "recoil";
 
 type Props = {
   communityData: Community;
@@ -30,6 +31,7 @@ const About = ({ communityData }: Props) => {
   // hooks
   const [user] = useAuthState(auth);
   const { onSelectFile, selectedFile, setSelectedFile } = useSelectFile();
+  const setCommunityStateValue = useSetRecoilState(communityState);
 
   // states
   const [uploadingImage, setUploadingImage] = useState({
@@ -54,9 +56,16 @@ const About = ({ communityData }: Props) => {
       // data_url is coming from the format that we told the file reader to read the files in
       await uploadString(imageRef, selectedFile, "data_url");
       const downloadURL = await getDownloadURL(imageRef);
-      await updateDoc(doc(firestore, `comunities/${communityData.id}`), {
+      await updateDoc(doc(firestore, "communities", communityData.id), {
         imageURL: downloadURL,
       });
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        currentCommunity: {
+          ...communityData,
+          imageURL: downloadURL,
+        },
+      }));
     } catch (error) {
       console.log("🚀 ~ file: About.tsx:53 ~ About ~ error", error);
     }
