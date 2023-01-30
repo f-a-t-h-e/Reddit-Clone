@@ -43,8 +43,10 @@ const PostItem = ({
 }: Props) => {
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isDeletionLoading, setIsDeletionLoading] = useState(false);
 
   const handleDelete = async () => {
+    setIsDeletionLoading(true);
     try {
       const success = await onPostDelete(post);
       if (!success) {
@@ -55,6 +57,7 @@ const PostItem = ({
 
       setError(error.message || error);
     }
+    setIsDeletionLoading(false);
   };
 
   return (
