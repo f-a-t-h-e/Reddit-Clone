@@ -15,16 +15,24 @@ export interface IPost {
   // NOTE : You can don't need to worry about craetedAt being null because you will use a server & will validate
   createdAt: Timestamp;
 }
+// TO_DO : Check adding this to the IPost in the client side only
+export interface IPostVote {
+  id: string;
+  postId: string;
+  communityId: string;
+  voteValue: number;
+}
 
 interface IPostState {
   selectedPost: IPost | null;
   posts: IPost[];
-  // postVotes:number
+  postVotes: IPostVote[];
 }
 
 const defaultPostState: IPostState = {
   selectedPost: null,
   posts: [],
+  postVotes: [],
 };
 
 export const postState = atom<IPostState>({
