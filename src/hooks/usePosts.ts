@@ -79,7 +79,7 @@ const usePosts = () => {
         const existingVote = postStateValue.postVotes[voteIndex];
         const postVoteRef = doc(
           firestore,
-          "user",
+          "users",
           `${user.uid}/postVotes/${existingVote.id}`
         );
         // removing the vote
