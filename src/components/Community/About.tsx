@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiCakeLine } from "react-icons/ri";
 import { Community } from "@/atoms/communities.Atom";
@@ -11,6 +11,7 @@ import {
   Stack,
   Text,
   Image,
+  Spinner,
 } from "@chakra-ui/react";
 import moment from "moment";
 import Link from "next/link";
@@ -24,10 +25,36 @@ type Props = {
 };
 
 const About = ({ communityData }: Props) => {
+  // hooks
   const [user] = useAuthState(auth);
-  const selectedFileRef = useRef(null);
-
   const { onSelectFile, selectedFile, setSelectedFile } = useSelectFile();
+
+  // states
+  const [uploadingImage, setUploadingImage] = useState({
+    yes: false,
+    loading: false,
+  });
+  const selectFileRef = useRef<HTMLInputElement>(null);
+
+  // functions
+  const handleSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUploadingImage((prev) => ({ ...prev, yes: true, loading: true }));
+    onSelectFile(event);
+    setUploadingImage((prev) => ({ ...prev, loading: false }));
+  };
+
+  const handleUploadImage = async (
+    event: React.MouseEvent<HTMLParagraphElement, MouseEvent>
+  ) => {
+    setUploadingImage((prev) => ({ ...prev, yes: true, loading: true }));
+    /**
+     *
+     * UPLOAd TO STORAGE
+     *
+     */
+    setSelectedFile("");
+    setUploadingImage((prev) => ({ ...prev, yes: false, loading: false }));
+  };
   return (
     <Box pos="sticky" top="14px">
       <Flex
@@ -79,6 +106,7 @@ const About = ({ communityData }: Props) => {
               Create Post
             </Button>
           </Link>
+          {/* start admin section */}
           {user && user.uid === communityData.creatorId && (
             <>
               <Divider />
@@ -89,15 +117,24 @@ const About = ({ communityData }: Props) => {
                     color="blue.500"
                     cursor="pointer"
                     _hover={{ textDecoration: "underline" }}
-                    onClick={() => {}}
+                    onClick={() => selectFileRef.current?.click()}
                   >
                     Change Image
                   </Text>
-                  {communityData.imageURL ? (
+                  <input
+                    id="file-upload"
+                    type="file"
+                    accept="image/x-png,image/gif,image/jpeg"
+                    hidden
+                    ref={selectFileRef}
+                    onChange={handleSelectImage}
+                  />
+                  {communityData.imageURL ||
+                  (uploadingImage.yes && !uploadingImage.loading) ? (
                     <Image
                       borderRadius="full"
                       boxSize="40px"
-                      src={communityData.imageURL}
+                      src={communityData.imageURL || selectedFile}
                       alt={communityData.id}
                     />
                   ) : (
@@ -110,9 +147,18 @@ const About = ({ communityData }: Props) => {
                     />
                   )}
                 </Flex>
+                {uploadingImage.yes &&
+                  (uploadingImage.loading ? (
+                    <Spinner />
+                  ) : (
+                    <Text cursor="pointer" onClick={handleUploadImage}>
+                      Save Changes
+                    </Text>
+                  ))}
               </Stack>
             </>
           )}
+          {/* end admin section */}
         </Stack>
       </Flex>
     </Box>
