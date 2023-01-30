@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   AlertIcon,
@@ -53,32 +53,49 @@ const PostItem = ({
   const [isDeletionLoading, setIsDeletionLoading] = useState(false);
   const [singlePostPage, setSinglePostPage] = useState(false);
 
-  const handleDelete = async () => {
-    setIsDeletionLoading(true);
-    try {
-      const success = await onPostDelete(post);
-      if (!success) {
-        throw new Error("Couldn't delete the post...");
+  const handleDelete = useCallback(
+    async (
+      event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+      {
+        onPostDelete,
+        post,
+      }: {
+        onPostDelete: (post: IPost) => Promise<boolean>;
+        post: IPost;
       }
-    } catch (error: any) {
-      console.log("handleDelete at PostItem component ", error);
+    ) => {
+      event.stopPropagation();
+      setIsDeletionLoading(true);
+      try {
+        const success = await onPostDelete(post);
+        if (!success) {
+          throw new Error("Couldn't delete the post...");
+        }
+      } catch (error: any) {
+        console.log("handleDelete at PostItem component ", error);
 
-      setError(error.message || error);
-    }
-    setIsDeletionLoading(false);
-  };
+        setError(error.message || error);
+      }
+      setIsDeletionLoading(false);
+    },
+    []
+  );
 
-  const handleVote = async (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
-    {
-      communityId,
-      post,
-      voteValue,
-    }: { post: IPost; voteValue: 1 | -1; communityId: Community["id"] }
-  ) => {
-    event.stopPropagation();
-    onVote(post, voteValue, communityId);
-  };
+  const handleVote = useCallback(
+    async (
+      event: React.MouseEvent<SVGElement, MouseEvent>,
+      {
+        communityId,
+        post,
+        voteValue,
+      }: { post: IPost; voteValue: 1 | -1; communityId: Community["id"] },
+      vote: typeof onVote
+    ) => {
+      event.stopPropagation();
+      vote(post, voteValue, communityId);
+    },
+    []
+  );
   return (
     <Flex
       border="1px solid"
@@ -109,7 +126,11 @@ const PostItem = ({
           fontSize={22}
           cursor="pointer"
           onClick={(e) =>
-            handleVote(e, { post, voteValue: 1, communityId: post.communityId })
+            handleVote(
+              e,
+              { post, voteValue: 1, communityId: post.communityId },
+              onVote
+            )
           }
         />
         <Text fontSize="9pt">{post.voteStatus}</Text>
@@ -123,11 +144,15 @@ const PostItem = ({
           fontSize={22}
           cursor="pointer"
           onClick={(e) =>
-            handleVote(e, {
-              post,
-              voteValue: -1,
-              communityId: post.communityId,
-            })
+            handleVote(
+              e,
+              {
+                post,
+                voteValue: -1,
+                communityId: post.communityId,
+              },
+              onVote
+            )
           }
         />
       </Flex>
@@ -207,7 +232,7 @@ const PostItem = ({
               borderRadius={4}
               _hover={{ bg: "gray.200" }}
               cursor="pointer"
-              onClick={() => handleDelete()}
+              onClick={(e) => handleDelete(e, { onPostDelete, post })}
             >
               {isDeletionLoading ? (
                 <Spinner size="sm" />
