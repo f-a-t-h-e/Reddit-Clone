@@ -106,10 +106,10 @@ const PostItem = ({
       {/* end VOTE */}
 
       <Flex direction="column" width="100%">
-        {true && (
+        {error && (
           <Alert status="error" borderRadius={4}>
             <AlertIcon />
-            Something went wrong
+            {error}
           </Alert>
         )}
         <Stack spacing={1} p="10px 10px">
