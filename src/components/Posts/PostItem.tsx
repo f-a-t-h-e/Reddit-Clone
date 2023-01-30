@@ -37,7 +37,7 @@ type Props = {
     communityId: Community["id"]
   ) => Promise<boolean>;
   onPostDelete: (post: IPost) => Promise<boolean>;
-  onSelectedPost: () => {};
+  onSelectedPost?: () => {};
 };
 
 const PostItem = ({
