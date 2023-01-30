@@ -172,8 +172,14 @@ const PostItem = ({
               cursor="pointer"
               onClick={() => handleDelete()}
             >
-              <Icon as={AiOutlineDelete} mr="2" />
-              <Text fontSize="9pt">Delete</Text>
+              {isDeletionLoading ? (
+                <Spinner size="sm" />
+              ) : (
+                <>
+                  <Icon as={AiOutlineDelete} mr="2" />
+                  <Text fontSize="9pt">Delete</Text>
+                </>
+              )}
             </Flex>
           )}
         </Flex>
