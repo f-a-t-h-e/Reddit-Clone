@@ -11,6 +11,7 @@ import PageConentLayout from "@/components/Layout/PageConent";
 import CreatePostLink from "@/components/Community/CreatePostLink";
 import PostsFeed from "@/components/Posts/PostsFeed";
 import { useSetRecoilState } from "recoil";
+import About from "@/components/Community/About";
 
 type Props = {
   communityData: Community;
@@ -37,7 +38,9 @@ const CommunityPage = ({ communityData }: Props) => {
           <CreatePostLink />
           <PostsFeed communityData={communityData} />
         </>
-        <></>
+        <>
+          <About communityData={communityData} />
+        </>
       </PageConentLayout>
     </>
   );
