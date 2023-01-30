@@ -35,7 +35,7 @@ const UserMenu = ({ user }: Props) => {
   const logOut = async () => {
     await signOut(auth);
     // TO_DO Remove this, @/hooks/useCommunityData/()=>{}:useCommunityData/useEffect .
-    resetCommunityState();
+    // resetCommunityState();
   };
 
   return (
