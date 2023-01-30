@@ -29,9 +29,7 @@ const usePosts = () => {
 
     try {
       const { voteStatus } = post;
-      const voteIndex = postStateValue.postVotes.findIndex(
-        (vote) => vote.postId === post.id
-      );
+      let voteIndex = -1;
 
       const batch = writeBatch(firestore);
       const updatedPost = { ...post };
@@ -42,8 +40,13 @@ const usePosts = () => {
         }
         return value;
       });
-      // Hint : This postVotes is related to the current user
-      let updatedPostVotes = [...postStateValue.postVotes];
+      // Hint : These postVotes is related to the current user
+      let updatedPostVotes = postStateValue.postVotes.map((value, index) => {
+        if (value.postId === post.id) {
+          voteIndex = index;
+        }
+        return value;
+      });
       let voteValueChange: 2 | 1 | -1 | -2 = voteValue;
 
       // The user has no votes on this post
@@ -72,12 +75,10 @@ const usePosts = () => {
           "user",
           `${user.uid}/postVotes/${existingVote.id}`
         );
-
+        // removing the vote
         if (existingVote.voteValue === voteValue) {
           updatedPost.voteStatus = voteStatus - voteValue;
-          updatedPostVotes = updatedPostVotes.filter(
-            (postVote) => postVote.id !== existingVote.id
-          );
+          updatedPostVotes.splice(voteIndex, 1);
           // Edit to Firestore
           batch.delete(postVoteRef);
           // to remove the vote we need its opposite value to be added
@@ -89,7 +90,7 @@ const usePosts = () => {
 
           updatedPostVotes[voteIndex] = {
             ...existingVote,
-            voteValue: voteValue, // 1 or -1
+            voteValue, // 1 or -1
           };
           // Edit to Firestore
           batch.update(postVoteRef, { voteValue });
