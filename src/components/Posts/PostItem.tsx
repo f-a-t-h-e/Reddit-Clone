@@ -51,6 +51,7 @@ const PostItem = ({
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [error, setError] = useState("");
   const [isDeletionLoading, setIsDeletionLoading] = useState(false);
+  const [singlePostPage, setSinglePostPage] = useState(false);
 
   const handleDelete = async () => {
     setIsDeletionLoading(true);
@@ -71,22 +72,23 @@ const PostItem = ({
     <Flex
       border="1px solid"
       bg="white"
-      borderColor="gray.300"
-      borderRadius={4}
+      borderColor={singlePostPage ? "white" : "gray.300"}
+      borderRadius={singlePostPage ? "4px 4px 0px 0px" : "4px"}
       _hover={{
-        borderColor: "gray.500",
+        borderColor: singlePostPage ? "none" : "gray.500",
       }}
-      cursor="pointer"
+      cursor={singlePostPage ? "unset" : "pointer"}
       onClick={() => onSelectedPost && onSelectedPost(post)}
     >
       {/* start VOTE */}
       <Flex
         direction="column"
         align="center"
-        bg="gray.100"
+        bg={singlePostPage ? "none" : "gray.100"}
         p={2}
         w="40px"
-        borderRadius={4}
+        // Note : this is using 3px instead of 4 because it has smaller dimentions
+        borderRadius={singlePostPage ? 0 : "3px 0px 0px 3px"}
       >
         <Icon
           as={
