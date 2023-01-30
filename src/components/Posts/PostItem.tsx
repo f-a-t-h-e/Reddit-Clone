@@ -37,7 +37,7 @@ type Props = {
     communityId: Community["id"]
   ) => Promise<boolean>;
   onPostDelete: (post: IPost) => Promise<boolean>;
-  onSelectedPost?: () => {};
+  onSelectedPost?: (post: IPost) => {};
 };
 
 const PostItem = ({
@@ -77,7 +77,7 @@ const PostItem = ({
         borderColor: "gray.500",
       }}
       cursor="pointer"
-      onClick={() => onSelectedPost}
+      onClick={() => onSelectedPost && onSelectedPost(post)}
     >
       {/* start VOTE */}
       <Flex
