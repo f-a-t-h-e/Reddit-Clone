@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiCakeLine } from "react-icons/ri";
 import { Community } from "@/atoms/communities.Atom";
@@ -13,12 +13,16 @@ import {
 } from "@chakra-ui/react";
 import moment from "moment";
 import Link from "next/link";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase/clientApp";
 
 type Props = {
   communityData: Community;
 };
 
 const About = ({ communityData }: Props) => {
+  const [user] = useAuthState(auth);
+  const selectedFileRef = useRef(null);
   return (
     <Box pos="sticky" top="14px">
       <Flex
@@ -70,6 +74,24 @@ const About = ({ communityData }: Props) => {
               Create Post
             </Button>
           </Link>
+          {user && user.uid === communityData.creatorId && (
+            <>
+              <Divider />
+              <Stack spacing={1} fontSize="10pt">
+                <Text>Admin</Text>
+                <Flex align="center" justify="space-between">
+                  <Text
+                    color="blue.500"
+                    cursor="pointer"
+                    _hover={{ textDecoration: "underline" }}
+                    onClick={() => {}}
+                  >
+                    Change Image
+                  </Text>
+                </Flex>
+              </Stack>
+            </>
+          )}
         </Stack>
       </Flex>
     </Box>
