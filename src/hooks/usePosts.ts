@@ -159,7 +159,12 @@ const usePosts = () => {
     }
     return true;
   };
-  const onSelectedPost = async () => {};
+  const onSelectedPost = (post: IPost) => {
+    setPostStateValue((prev) => ({
+      ...prev,
+      selectedPost: post,
+    }));
+  };
   const getCommunityPostVotes = useCallback(
     async (user: User, communityId: Community["id"]) => {
       if (!user) {
