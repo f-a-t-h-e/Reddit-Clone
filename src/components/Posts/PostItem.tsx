@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import {
+  Alert,
+  AlertIcon,
   Flex,
   Icon,
   Image,
@@ -102,7 +104,14 @@ const PostItem = ({
         />
       </Flex>
       {/* end VOTE */}
+
       <Flex direction="column" width="100%">
+        {true && (
+          <Alert status="error" borderRadius={4}>
+            <AlertIcon />
+            Something went wrong
+          </Alert>
+        )}
         <Stack spacing={1} p="10px 10px">
           <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
             {/* Check for Home Page */}
