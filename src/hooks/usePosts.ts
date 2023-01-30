@@ -18,12 +18,14 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useCallback, useEffect } from "react";
 import { User } from "firebase/auth";
 import { authModalState } from "../atoms/authModalAtom";
+import { useRouter } from "next/router";
 
 const usePosts = () => {
   const [user] = useAuthState(auth);
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
   const { currentCommunity } = useRecoilValue(communityState);
   const setAuthModalState = useSetRecoilState(authModalState);
+  const router = useRouter();
   // TO_DO : this is supposed to be handled from the server not here
   /**
    * This function implementation is temporary till adding server endpoints
@@ -164,6 +166,7 @@ const usePosts = () => {
       ...prev,
       selectedPost: post,
     }));
+    router.push(`/r/${post.communityId}/comments/${post.id}`);
   };
   const getCommunityPostVotes = useCallback(
     async (user: User, communityId: Community["id"]) => {
