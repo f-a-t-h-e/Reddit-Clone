@@ -3,7 +3,7 @@ import { User } from "firebase/auth";
 import React, { useState } from "react";
 import AuthButtons from "@/components/Navbar/RightContent/AuthButtons";
 import { IOnCreateComment } from "./types";
-import { IPost } from "@/atoms/posts.Atom";
+import { IPost, postState } from "@/atoms/posts.Atom";
 import { firestore } from "@/firebase/clientApp";
 import {
   collection,
@@ -14,6 +14,7 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { Comment } from "./CommentItem";
+import { useSetRecoilState } from "recoil";
 
 type Props = {
   user?: User | null;
@@ -30,6 +31,7 @@ const ComentInput = ({
   setCreateLoading,
   setComments,
 }: Props) => {
+  const setPostState = useSetRecoilState(postState);
   const [commentText, setCommentText] = useState("");
   // TO_DO : update this function parameters to make it independent
   const onCreateComment: IOnCreateComment = async ({ post, text, user }) => {
@@ -77,6 +79,16 @@ const ComentInput = ({
         },
         ...prev,
       ]);
+      // TO_DO : whith this implementaion the user can't comment on multiple posts at the same time
+      // Hint : after using a (Hash map / Array) for the posts and let the selected post be just a pointer to it's place
+      // you will be able to avoid this easily
+      setPostState((prev) => ({
+        ...prev,
+        selectedPost: {
+          ...post,
+          numberOfComments: post.numberOfComments + 1,
+        },
+      }));
     } catch (error) {
       console.log("🚀 ~ file: index.tsx:26 ~ onCreateComment ~ error", error);
       setCreateLoading(false);
