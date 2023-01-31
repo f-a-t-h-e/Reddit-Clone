@@ -10,12 +10,14 @@ import { auth, firestore } from "@/firebase/clientApp";
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   increment,
   writeBatch,
 } from "firebase/firestore";
 import { authModalState } from "@/atoms/authModalAtom";
 import { User } from "firebase/auth";
+import { useRouter } from "next/router";
 
 const useCommunityData = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
@@ -26,6 +28,7 @@ const useCommunityData = () => {
   const [loading, setLoading] = useState(false);
   const [isError, setIsError] = useState("");
 
+  const router = useRouter();
   const joinCommunity = async (community: Community) => {
     if (!user) return setIsError("Please Log in and try again");
     // TO_DO : Remove all of these, and let the server process such tasks.
@@ -146,6 +149,25 @@ const useCommunityData = () => {
     }
   };
 
+  const getCommunityData = async (communityId: Community["id"]) => {
+    try {
+      const communityDocRef = doc(firestore, "communities", communityId);
+      const communityDoc = await getDoc(communityDocRef);
+
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        currentCommunity: {
+          id: communityDoc.id,
+          ...communityDoc.data(),
+        } as Community,
+      }));
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: useCommunityData.ts:153 ~ getCommunityData ~ error",
+        error
+      );
+    }
+  };
   useEffect(() => {
     setLoading(true);
     if (!user) {
@@ -160,6 +182,13 @@ const useCommunityData = () => {
     // TO_DO : fix this properly
   }, [user]);
 
+  useEffect(() => {
+    const { communityId } = router.query;
+
+    if (communityId && !communityStateValue.currentCommunity) {
+      getCommunityData(communityId as string);
+    }
+  }, [router, communityStateValue.currentCommunity]);
   return {
     communityStateValue,
     onJoinOrLeaveCommunity,
