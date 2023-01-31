@@ -7,8 +7,9 @@ import { auth, firestore } from "@/firebase/clientApp";
 import { useRouter } from "next/router";
 import { IPost } from "@/atoms/posts.Atom";
 import { doc, getDoc } from "firebase/firestore";
-import About from "../../../../components/Community/About";
-import useCommunityData from "../../../../hooks/useCommunityData";
+import About from "@/components/Community/About";
+import useCommunityData from "@/hooks/useCommunityData";
+import Comments from "@/components/Posts/Comments";
 
 type Props = {};
 
@@ -71,7 +72,7 @@ const PostPage = ({}: Props) => {
           />
         )}
 
-        {/* <Comments /> */}
+        <Comments />
       </>
       <>
         {communityStateValue.currentCommunity && (
