@@ -2,7 +2,7 @@ import { Flex, Textarea, Button, Text, Box } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import React, { useState } from "react";
 import AuthButtons from "@/components/Navbar/RightContent/AuthButtons";
-import { IOnCreateComment } from "./types";
+import { IComment, IOnCreateComment } from "./types";
 import { IPost, postState } from "@/atoms/posts.Atom";
 import { firestore } from "@/firebase/clientApp";
 import {
@@ -13,7 +13,6 @@ import {
   Timestamp,
   writeBatch,
 } from "firebase/firestore";
-import { Comment } from "./CommentItem";
 import { useSetRecoilState } from "recoil";
 
 type Props = {
@@ -21,7 +20,7 @@ type Props = {
   createLoading: boolean;
   post: IPost;
   setCreateLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setComments: React.Dispatch<React.SetStateAction<Comment[]>>;
+  setComments: React.Dispatch<React.SetStateAction<IComment[]>>;
 };
 
 const ComentInput = ({
@@ -52,7 +51,7 @@ const ComentInput = ({
         postTitle: post.title,
         text,
         createdAt: serverTimestamp() as Timestamp,
-      } as Omit<Comment, "id">);
+      } as Omit<IComment, "id">);
 
       // get the post refrence
       const postDocRef = doc(firestore, "posts", post.id);
