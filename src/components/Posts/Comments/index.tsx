@@ -4,8 +4,16 @@ import React, { useEffect, useState } from "react";
 import { IPost } from "@/atoms/posts.Atom";
 import type { Comment } from "./CommentItem";
 import CommentInput from "./CommentInput";
-import { writeBatch } from "firebase/firestore";
-import { firestore } from "../../../firebase/clientApp";
+import {
+  collection,
+  doc,
+  increment,
+  serverTimestamp,
+  Timestamp,
+  writeBatch,
+} from "firebase/firestore";
+import { firestore } from "@/firebase/clientApp";
+import { IOnCreateComment } from "./types";
 
 type Props = {
   user?: User | null;
@@ -14,18 +22,9 @@ type Props = {
 };
 
 const Comments = ({ communityId, selectedPost, user }: Props) => {
-  const [commentText, setCommentText] = useState("");
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [createLoading, setCreateLoading] = useState(false);
-
-  const onCreateComment = async (commentText: string) => {
-    // create comment doc
-    // update post numberOfComments +1
-
-    //  update recoil state
-    return false;
-  };
 
   const onCommentDelete = async (comment: Comment) => {
     // delete comment doc
@@ -52,11 +51,11 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
         w="100%"
       >
         <CommentInput
-          commentText={commentText}
-          setCommentText={setCommentText}
-          user={user}
           createLoading={createLoading}
-          onCreateComment={onCreateComment}
+          post={selectedPost}
+          user={user}
+          setCreateLoading={setCreateLoading}
+          setComments={setComments}
         />
       </Flex>
     </Box>
