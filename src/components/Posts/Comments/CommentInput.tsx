@@ -86,26 +86,21 @@ const ComentInput = ({
     return true;
   };
   return (
-    <Flex
-      direction="column"
-      // position="relative"
-    >
+    <Flex direction="column">
       {user ? (
         <>
           <Text mb={1}>
             Comment as{" "}
-            <span style={{ color: "#3182CE" }}>
-              {user?.email?.split("@")[0]}
-            </span>
+            <Text display="inline-block" style={{ color: "#3182CE" }}>
+              {user.displayName || user.email!.split("@")[0]}
+            </Text>
           </Text>
           <Box
             border="1px solid transparent"
             borderRadius={4}
             _focusWithin={{
-              // border: "10px solid",
               zIndex: 1,
               borderColor: "blue.500",
-              border: "1px solid black",
               boxShadow: "0 0 0 1px #3182ce",
             }}
             _hover={{
@@ -123,7 +118,7 @@ const ComentInput = ({
               _placeholder={{ color: "gray.500" }}
               _focus={{
                 outline: "none",
-                // bg: "white",
+                bg: "white",
                 border: "none",
                 boxShadow: "none",
               }}
