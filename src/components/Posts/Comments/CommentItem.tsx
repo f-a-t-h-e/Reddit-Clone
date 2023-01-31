@@ -8,20 +8,14 @@ import {
   IoArrowUpCircleOutline,
 } from "react-icons/io5";
 import { Box, Flex, Icon, Stack, Text } from "@chakra-ui/react";
+import { User } from "firebase/auth";
 
 type Props = {
   comment: IComment;
-  onDeleteComment: (comment: IComment) => Promise<void>;
-  isLoading: boolean;
-  userId?: string;
+  user?: User | null;
 };
 
-const CommentItem = ({
-  comment,
-  isLoading,
-  onDeleteComment,
-  userId,
-}: Props) => {
+const CommentItem = ({ comment, user }: Props) => {
   return (
     <Flex>
       <Box mr={2}>
