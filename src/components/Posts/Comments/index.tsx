@@ -48,12 +48,12 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
           setCreateLoading={setCreateLoading}
           setComments={setComments}
         />
-        <Stack spacing={6}>
-          {comments.map((comment, i) => (
-            <CommentItem key={i} comment={comment} user={user} />
-          ))}
-        </Stack>
       </Flex>
+      <Stack spacing={6}>
+        {comments.map((comment, i) => (
+          <CommentItem key={i} comment={comment} user={user} />
+        ))}
+      </Stack>
     </Box>
   );
 };
