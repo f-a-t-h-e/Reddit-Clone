@@ -86,7 +86,10 @@ const ComentInput = ({
     return true;
   };
   return (
-    <Flex direction="column" position="relative">
+    <Flex
+      direction="column"
+      // position="relative"
+    >
       {user ? (
         <>
           <Text mb={1}>
@@ -95,40 +98,54 @@ const ComentInput = ({
               {user?.email?.split("@")[0]}
             </span>
           </Text>
-          <Textarea
-            value={commentText}
-            onChange={(event) => setCommentText(event.target.value)}
-            placeholder="What are your thoughts?"
-            fontSize="10pt"
+          <Box
+            border="1px solid transparent"
             borderRadius={4}
-            minHeight="160px"
-            pb={10}
-            _placeholder={{ color: "gray.500" }}
-            _focus={{
-              outline: "none",
-              bg: "white",
+            _focusWithin={{
+              // border: "10px solid",
+              zIndex: 1,
+              borderColor: "blue.500",
               border: "1px solid black",
+              boxShadow: "0 0 0 1px #3182ce",
             }}
-          />
-          <Flex
-            position="absolute"
-            left="1px"
-            right={0.1}
-            bottom="1px"
-            justify="flex-end"
-            bg="gray.100"
-            p="6px 8px"
-            borderRadius="0px 0px 4px 4px"
+            _hover={{
+              borderColor: "gray.300",
+            }}
           >
-            <Button
-              height="26px"
-              disabled={!commentText.length}
-              isLoading={createLoading}
-              onClick={() => onCreateComment({ post, text: commentText, user })}
+            <Textarea
+              value={commentText}
+              onChange={(event) => setCommentText(event.target.value)}
+              placeholder="What are your thoughts?"
+              fontSize="10pt"
+              border="none"
+              minH="160px"
+              borderRadius="4px 4px 0px 0px"
+              _placeholder={{ color: "gray.500" }}
+              _focus={{
+                outline: "none",
+                // bg: "white",
+                border: "none",
+                boxShadow: "none",
+              }}
+            />
+            <Flex
+              justify="flex-end"
+              bg="gray.100"
+              p="6px 8px"
+              borderRadius="0px 0px 4px 4px"
             >
-              Comment
-            </Button>
-          </Flex>
+              <Button
+                h="26px"
+                isDisabled={!commentText.length}
+                isLoading={createLoading}
+                onClick={() =>
+                  onCreateComment({ post, text: commentText, user })
+                }
+              >
+                Comment
+              </Button>
+            </Flex>
+          </Box>
         </>
       ) : (
         <Flex
