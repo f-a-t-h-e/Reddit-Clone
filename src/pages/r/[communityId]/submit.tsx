@@ -10,6 +10,7 @@ import { Box, Text } from "@chakra-ui/react";
 import NewPostForm from "@/components/Posts/PostForm/NewPostForm";
 import PageConentLayout from "@/components/Layout/PageConent";
 import { communityState } from "@/atoms/communities.Atom";
+import About from "../../../components/Community/About";
 
 type Props = {};
 
@@ -34,7 +35,11 @@ const SubmitPostPage = ({}: Props) => {
         </Box>
         {user && <NewPostForm user={user} />}
       </>
-      <></>
+      <>
+        {communityStateValue.currentCommunity && (
+          <About communityData={communityStateValue.currentCommunity} />
+        )}
+      </>
     </PageConentLayout>
   );
 };
