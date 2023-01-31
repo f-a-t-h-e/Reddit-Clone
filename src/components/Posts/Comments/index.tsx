@@ -1,9 +1,10 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Stack } from "@chakra-ui/react";
 import type { User } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { IPost } from "@/atoms/posts.Atom";
 import CommentInput from "./CommentInput";
 import type { IComment } from "./types";
+import CommentItem from "./CommentItem";
 
 type Props = {
   user?: User | null;
@@ -47,6 +48,11 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
           setCreateLoading={setCreateLoading}
           setComments={setComments}
         />
+        <Stack spacing={6}>
+          {comments.map((comment, i) => (
+            <CommentItem key={i} comment={comment} user={user} />
+          ))}
+        </Stack>
       </Flex>
     </Box>
   );
