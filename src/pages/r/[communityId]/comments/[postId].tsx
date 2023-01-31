@@ -7,6 +7,8 @@ import { auth, firestore } from "@/firebase/clientApp";
 import { useRouter } from "next/router";
 import { IPost } from "@/atoms/posts.Atom";
 import { doc, getDoc } from "firebase/firestore";
+import About from "../../../../components/Community/About";
+import useCommunityData from "../../../../hooks/useCommunityData";
 
 type Props = {};
 
@@ -19,6 +21,7 @@ const PostPage = ({}: Props) => {
     postStateValue,
     setPostStateValue,
   } = usePosts();
+  const { communityStateValue } = useCommunityData();
   const [user] = useAuthState(auth);
   const router = useRouter();
 
@@ -70,7 +73,11 @@ const PostPage = ({}: Props) => {
 
         {/* <Comments /> */}
       </>
-      <>{/* <About /> */}</>
+      <>
+        {communityStateValue.currentCommunity && (
+          <About communityData={communityStateValue.currentCommunity} />
+        )}
+      </>
     </PageConentLayout>
   );
 };
