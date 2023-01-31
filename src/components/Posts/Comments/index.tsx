@@ -51,7 +51,12 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
       </Flex>
       <Stack spacing={6}>
         {comments.map((comment, i) => (
-          <CommentItem key={i} comment={comment} user={user} />
+          <CommentItem
+            key={i}
+            comment={comment}
+            user={user}
+            onCommentDelete={onCommentDelete}
+          />
         ))}
       </Stack>
     </Box>
