@@ -1,9 +1,14 @@
 import React from "react";
 
-type Props = {};
+type Props = {
+  comment: Comment;
+  onDeleteComment: (comment: Comment) => Promise<void>;
+  isLoading: boolean;
+  userId?: string;
+};
 
-const Comment = (props: Props) => {
-  return <div>Comment</div>;
+const Comment = ({ comment, isLoading, onDeleteComment, userId }: Props) => {
+  return <div></div>;
 };
 
 export default Comment;
