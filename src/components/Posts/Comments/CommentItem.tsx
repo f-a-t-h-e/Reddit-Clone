@@ -19,12 +19,12 @@ const CommentItem = ({ comment, user }: Props) => {
   return (
     <Flex>
       <Box mr={2}>
-        <Icon as={FaReddit} />
+        <Icon as={FaReddit} fontSize={30} color="gray.300" />
       </Box>
       <Stack spacing={1}>
         <Stack direction="row" align="center" fontSize="8pt">
-          <Text>{comment.authorName}</Text>
-          <Text>
+          <Text fontWeight={700}>{comment.authorName}</Text>
+          <Text color="gray.600">
             {moment(new Date(comment.createdAt.seconds * 1000)).fromNow()}
           </Text>
         </Stack>
