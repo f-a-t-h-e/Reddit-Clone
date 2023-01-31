@@ -16,6 +16,7 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
   const [comments, setComments] = useState<IComment[]>([]);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [createLoading, setCreateLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const onCommentDelete = async (comment: IComment) => {
     // delete comment doc
@@ -56,6 +57,7 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
             comment={comment}
             user={user}
             onCommentDelete={onCommentDelete}
+            isLoading={deleteLoading}
           />
         ))}
       </Stack>

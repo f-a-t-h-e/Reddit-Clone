@@ -13,6 +13,8 @@ import { User } from "firebase/auth";
 type Props = {
   comment: IComment;
   user?: User | null;
+  onCommentDelete: (comment: IComment) => Promise<boolean>;
+  isLoading: boolean;
 };
 
 const CommentItem = ({ comment, user }: Props) => {
@@ -27,6 +29,22 @@ const CommentItem = ({ comment, user }: Props) => {
           <Text color="gray.600">
             {moment(new Date(comment.createdAt.seconds * 1000)).fromNow()}
           </Text>
+        </Stack>
+        <Text fontSize="10pt">{comment.text}</Text>
+        <Stack direction="row" align="center" cursor="pointer" color="gray.500">
+          <Icon as={IoArrowUpCircleOutline} />
+          <Icon as={IoArrowDownCircleOutline} />
+          {user && user.uid === comment.authorId && (
+            <>
+              {/* TO_DO : Redesign the structure of components to allow mutation */}
+              <Text fontSize="9pt" _hover={{ color: "blue.500" }}>
+                Edit
+              </Text>
+              <Text fontSize="9pt" _hover={{ color: "blue.500" }}>
+                Delete
+              </Text>
+            </>
+          )}
         </Stack>
       </Stack>
     </Flex>
