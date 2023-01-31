@@ -1,5 +1,5 @@
 import React from "react";
-import { IComment } from "./types";
+import type { IComment } from "./types";
 
 type Props = {
   comment: IComment;
