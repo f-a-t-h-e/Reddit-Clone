@@ -72,7 +72,13 @@ const PostPage = ({}: Props) => {
           />
         )}
 
-        <Comments />
+        {postStateValue.selectedPost && (
+          <Comments
+            selectedPost={postStateValue.selectedPost}
+            communityId={postStateValue.selectedPost.communityId}
+            user={user}
+          />
+        )}
       </>
       <>
         {communityStateValue.currentCommunity && (
