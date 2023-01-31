@@ -2,8 +2,10 @@ import { Box, Flex, Stack } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { IPost } from "@/atoms/posts.Atom";
-import Comment from "./Comment";
+import type { Comment } from "./CommentItem";
 import CommentInput from "./CommentInput";
+import { writeBatch } from "firebase/firestore";
+import { firestore } from "../../../firebase/clientApp";
 
 type Props = {
   user?: User | null;
@@ -18,10 +20,20 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
   const [createLoading, setCreateLoading] = useState(false);
 
   const onCreateComment = async (commentText: string) => {
+    // create comment doc
+    // update post numberOfComments +1
+
+    //  update recoil state
     return false;
   };
 
-  const onCommentDelete = async (comment: any) => {};
+  const onCommentDelete = async (comment: Comment) => {
+    // delete comment doc
+    // update post numberOfComments -1
+
+    //  update recoil state
+    return false;
+  };
 
   const getPostComments = async () => {};
 
