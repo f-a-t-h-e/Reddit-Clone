@@ -4,7 +4,7 @@ import React from "react";
 export type Comment = {
   id: string;
   authorId: string;
-  authorDisplayText: string;
+  authorName: string;
   postId: string;
   postTitle: string;
   text: string;
