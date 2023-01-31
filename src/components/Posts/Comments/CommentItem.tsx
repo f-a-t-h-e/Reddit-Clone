@@ -7,7 +7,7 @@ import {
   IoArrowDownCircleOutline,
   IoArrowUpCircleOutline,
 } from "react-icons/io5";
-import { Box, Flex, Icon, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, Icon, Spinner, Stack, Text } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 
 type Props = {
@@ -17,7 +17,7 @@ type Props = {
   isLoading: boolean;
 };
 
-const CommentItem = ({ comment, user }: Props) => {
+const CommentItem = ({ comment, user, isLoading }: Props) => {
   return (
     <Flex>
       <Box mr={2}>
@@ -29,6 +29,7 @@ const CommentItem = ({ comment, user }: Props) => {
           <Text color="gray.600">
             {moment(new Date(comment.createdAt.seconds * 1000)).fromNow()}
           </Text>
+          {isLoading && <Spinner size="sm" />}
         </Stack>
         <Text fontSize="10pt">{comment.text}</Text>
         <Stack direction="row" align="center" cursor="pointer" color="gray.500">
