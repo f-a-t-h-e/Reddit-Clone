@@ -1,19 +1,9 @@
-import { Box, Flex, Stack } from "@chakra-ui/react";
-import { User } from "firebase/auth";
+import { Box, Flex } from "@chakra-ui/react";
+import type { User } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { IPost } from "@/atoms/posts.Atom";
-import type { Comment } from "./CommentItem";
 import CommentInput from "./CommentInput";
-import {
-  collection,
-  doc,
-  increment,
-  serverTimestamp,
-  Timestamp,
-  writeBatch,
-} from "firebase/firestore";
-import { firestore } from "@/firebase/clientApp";
-import { IOnCreateComment } from "./types";
+import type { IComment } from "./types";
 
 type Props = {
   user?: User | null;
@@ -22,11 +12,11 @@ type Props = {
 };
 
 const Comments = ({ communityId, selectedPost, user }: Props) => {
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<IComment[]>([]);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [createLoading, setCreateLoading] = useState(false);
 
-  const onCommentDelete = async (comment: Comment) => {
+  const onCommentDelete = async (comment: IComment) => {
     // delete comment doc
     // update post numberOfComments -1
 

@@ -1,19 +1,9 @@
-import { Timestamp } from "firebase/firestore";
 import React from "react";
-
-export type Comment = {
-  id: string;
-  authorId: string;
-  authorName: string;
-  postId: string;
-  postTitle: string;
-  text: string;
-  createdAt: Timestamp;
-};
+import type { IComment } from "./types";
 
 type Props = {
-  comment: Comment;
-  onDeleteComment: (comment: Comment) => Promise<void>;
+  comment: IComment;
+  onDeleteComment: (comment: IComment) => Promise<void>;
   isLoading: boolean;
   userId?: string;
 };
