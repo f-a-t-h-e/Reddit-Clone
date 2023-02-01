@@ -9,12 +9,24 @@ import {
 } from "@chakra-ui/react";
 import type { User } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { IPost } from "@/atoms/posts.Atom";
+import { IPost, postState } from "@/atoms/posts.Atom";
 import CommentInput from "./CommentInput";
-import type { IComment } from "./types";
+import type { IComment, IOnCreateComment } from "./types";
 import CommentItem from "./CommentItem";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  increment,
+  orderBy,
+  query,
+  serverTimestamp,
+  Timestamp,
+  where,
+  writeBatch,
+} from "firebase/firestore";
 import { firestore } from "@/firebase/clientApp";
+import { useSetRecoilState } from "recoil";
 
 type Props = {
   user?: User | null;
@@ -28,13 +40,74 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
   const [createLoading, setCreateLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const onCommentDelete = async (comment: IComment) => {
-    // delete comment doc
-    // update post numberOfComments -1
+  const setPostState = useSetRecoilState(postState);
+  const [commentText, setCommentText] = useState("");
 
-    //  update recoil state
-    return false;
+  const onCreateComment: IOnCreateComment = async ({ text, user }) => {
+    setCreateLoading(true);
+    try {
+      // TO_DO : make add a refrence for the user to his comments
+
+      // start a writeBatch
+      const batch = writeBatch(firestore);
+
+      // get a new comment refrence
+      const commentDocRef = doc(collection(firestore, "comments"));
+      // set the new comment to the commentDocRef reference
+      batch.set(commentDocRef, {
+        authorId: user.uid,
+        authorName: user.displayName || user.email!.split("@")[0],
+        postId: selectedPost.id,
+        postTitle: selectedPost.title,
+        text,
+        createdAt: serverTimestamp() as Timestamp,
+      } as Omit<IComment, "id">);
+
+      // get the post refrence
+      const postDocRef = doc(firestore, "posts", selectedPost.id);
+      // update the post using the refernce
+      batch.update(postDocRef, {
+        numberOfComments: increment(1),
+      });
+
+      // commit changes
+      await batch.commit();
+      // end writeBatch
+
+      // start altering the client's state
+      setCommentText("");
+      setComments((prev) => [
+        {
+          id: commentDocRef.id,
+          authorId: user.uid,
+          authorName: user.displayName || user.email!.split("@")[0],
+          postId: selectedPost.id,
+          postTitle: selectedPost.title,
+          text,
+          createdAt: { seconds: Date.now() / 1000 } as Timestamp,
+        },
+        ...prev,
+      ]);
+      // TO_DO : whith this implementaion the user can't comment on multiple posts at the same time
+      // Hint : after using a (Hash map / Array) for the posts and let the selected post be just a pointer to it's place
+      // you will be able to avoid this easily
+      setPostState((prev) => ({
+        ...prev,
+        selectedPost: {
+          ...selectedPost,
+          numberOfComments: selectedPost.numberOfComments + 1,
+        },
+      }));
+    } catch (error) {
+      console.log("🚀 ~ file: index.tsx:26 ~ onCreateComment ~ error", error);
+      setCreateLoading(false);
+      return false;
+    }
+    setCreateLoading(false);
+    return true;
   };
+
+  const onCommentDelete = async (comment: IComment) => {};
 
   const getPostComments = async () => {
     setFetchLoading(true);
@@ -73,11 +146,12 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
       >
         {!fetchLoading && (
           <CommentInput
-            createLoading={createLoading}
+            commentText={commentText}
+            setCommentText={setCommentText}
             post={selectedPost}
+            createLoading={createLoading}
             user={user}
-            setCreateLoading={setCreateLoading}
-            setComments={setComments}
+            onCreateComment={onCreateComment}
           />
         )}
       </Flex>
