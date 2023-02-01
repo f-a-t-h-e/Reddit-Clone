@@ -18,84 +18,22 @@ import { useSetRecoilState } from "recoil";
 type Props = {
   user?: User | null;
   createLoading: boolean;
+  onCreateComment: IOnCreateComment;
+  setCommentText: React.Dispatch<React.SetStateAction<string>>;
+  commentText: string;
   post: IPost;
-  setCreateLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setComments: React.Dispatch<React.SetStateAction<IComment[]>>;
 };
 
 const ComentInput = ({
   createLoading,
-  post,
   user,
-  setCreateLoading,
-  setComments,
+  commentText,
+  onCreateComment,
+  setCommentText,
+  post,
 }: Props) => {
-  const setPostState = useSetRecoilState(postState);
-  const [commentText, setCommentText] = useState("");
   // TO_DO : update this function parameters to make it independent
-  const onCreateComment: IOnCreateComment = async ({ post, text, user }) => {
-    setCreateLoading(true);
-    try {
-      // TO_DO : make add a refrence for the user to his comments
 
-      // start a writeBatch
-      const batch = writeBatch(firestore);
-
-      // get a new comment refrence
-      const commentDocRef = doc(collection(firestore, "comments"));
-      // set the new comment to the commentDocRef reference
-      batch.set(commentDocRef, {
-        authorId: user.uid,
-        authorName: user.displayName || user.email!.split("@")[0],
-        postId: post.id,
-        postTitle: post.title,
-        text,
-        createdAt: serverTimestamp() as Timestamp,
-      } as Omit<IComment, "id">);
-
-      // get the post refrence
-      const postDocRef = doc(firestore, "posts", post.id);
-      // update the post using the refernce
-      batch.update(postDocRef, {
-        numberOfComments: increment(1),
-      });
-
-      // commit changes
-      await batch.commit();
-      // end writeBatch
-
-      // start altering the client's state
-      setCommentText("");
-      setComments((prev) => [
-        {
-          id: commentDocRef.id,
-          authorId: user.uid,
-          authorName: user.displayName || user.email!.split("@")[0],
-          postId: post.id,
-          postTitle: post.title,
-          text,
-          createdAt: { seconds: Date.now() / 1000 } as Timestamp,
-        },
-        ...prev,
-      ]);
-      // TO_DO : whith this implementaion the user can't comment on multiple posts at the same time
-      // Hint : after using a (Hash map / Array) for the posts and let the selected post be just a pointer to it's place
-      // you will be able to avoid this easily
-      setPostState((prev) => ({
-        ...prev,
-        selectedPost: {
-          ...post,
-          numberOfComments: post.numberOfComments + 1,
-        },
-      }));
-    } catch (error) {
-      console.log("🚀 ~ file: index.tsx:26 ~ onCreateComment ~ error", error);
-      setCreateLoading(false);
-      return false;
-    }
-    setCreateLoading(false);
-    return true;
-  };
   return (
     <Flex direction="column">
       {user ? (
@@ -145,7 +83,7 @@ const ComentInput = ({
                 isDisabled={!commentText.length}
                 isLoading={createLoading}
                 onClick={() =>
-                  onCreateComment({ post, text: commentText, user })
+                  onCreateComment({ text: commentText, user, post })
                 }
               >
                 Comment
