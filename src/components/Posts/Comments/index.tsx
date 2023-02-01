@@ -38,6 +38,7 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
   const [comments, setComments] = useState<IComment[]>([]);
   const [fetchLoading, setFetchLoading] = useState(true);
   const [createLoading, setCreateLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState("");
 
   const setPostState = useSetRecoilState(postState);
   const [commentText, setCommentText] = useState("");
@@ -107,6 +108,7 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
   };
 
   const onCommentDelete = async (comment: IComment) => {
+    setDeleteLoading(comment.id);
     try {
       const batch = writeBatch(firestore);
 
@@ -129,9 +131,10 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
       }));
     } catch (error) {
       console.log("🚀 ~ file: index.tsx:38 ~ onCommentDelete ~ error", error);
+      setDeleteLoading("");
       return false;
     }
-
+    setDeleteLoading("");
     return true;
   };
 
@@ -198,6 +201,7 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
         ) : comments.length ? (
           comments.map((comment, i) => (
             <CommentItem
+              deleteLoading={comment.id === deleteLoading}
               key={i}
               comment={comment}
               user={user}
