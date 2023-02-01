@@ -135,6 +135,10 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
     return true;
   };
 
+  const onCommentEdit = async (comment: IComment) => {
+    return false;
+  };
+
   const getPostComments = async () => {
     setFetchLoading(true);
     try {
@@ -198,6 +202,7 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
               comment={comment}
               user={user}
               onCommentDelete={onCommentDelete}
+              onCommentEdit={onCommentEdit}
             />
           ))
         ) : (
