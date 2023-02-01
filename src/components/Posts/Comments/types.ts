@@ -4,7 +4,6 @@ import type { Timestamp } from "firebase/firestore";
 
 export interface IOnCreateCommentProps {
   user: User;
-  post: IPost;
   text: string;
 }
 export type IOnCreateComment = (
