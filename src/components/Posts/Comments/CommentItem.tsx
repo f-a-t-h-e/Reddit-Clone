@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import type { IComment } from "./types";
 
 import moment from "moment";
@@ -14,10 +14,16 @@ type Props = {
   comment: IComment;
   user?: User | null;
   onCommentDelete: (comment: IComment) => Promise<boolean>;
-  isLoading: boolean;
 };
 
-const CommentItem = ({ comment, user, isLoading, onCommentDelete }: Props) => {
+const CommentItem = ({ comment, user, onCommentDelete }: Props) => {
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const handleCommentDelete = async () => {
+    setDeleteLoading(true);
+    onCommentDelete(comment);
+    setDeleteLoading(false);
+  };
   return (
     <Flex>
       <Box mr={2}>
@@ -29,7 +35,7 @@ const CommentItem = ({ comment, user, isLoading, onCommentDelete }: Props) => {
           <Text color="gray.600">
             {moment(new Date(comment.createdAt.seconds * 1000)).fromNow()}
           </Text>
-          {isLoading && <Spinner size="sm" />}
+          {deleteLoading && <Spinner size="sm" />}
         </Stack>
         <Text fontSize="10pt">{comment.text}</Text>
         <Stack direction="row" align="center" cursor="pointer" color="gray.500">
