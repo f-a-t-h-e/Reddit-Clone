@@ -15,6 +15,7 @@ type Props = {
   user?: User | null;
   onCommentDelete: (comment: IComment) => Promise<boolean>;
   onCommentEdit: (comment: IComment) => Promise<boolean>;
+  deleteLoading: boolean;
 };
 
 const CommentItem = ({
@@ -22,22 +23,8 @@ const CommentItem = ({
   user,
   onCommentDelete,
   onCommentEdit,
+  deleteLoading,
 }: Props) => {
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [editLoading, setEditLoading] = useState(false);
-
-  const handleCommentDelete = async () => {
-    setDeleteLoading(true);
-    await onCommentDelete(comment);
-    setDeleteLoading(false);
-  };
-
-  const handleCommentEdit = async () => {
-    setEditLoading(true);
-    await onCommentEdit(comment);
-    setEditLoading(false);
-  };
-
   return (
     <Flex>
       <Box mr={2}>
@@ -61,14 +48,14 @@ const CommentItem = ({
               <Text
                 fontSize="9pt"
                 _hover={{ color: "blue.500" }}
-                onClick={() => handleCommentEdit()}
+                onClick={() => onCommentEdit(comment)}
               >
                 Edit
               </Text>
               <Text
                 fontSize="9pt"
                 _hover={{ color: "blue.500" }}
-                onClick={() => handleCommentDelete()}
+                onClick={() => onCommentDelete(comment)}
               >
                 Delete
               </Text>
