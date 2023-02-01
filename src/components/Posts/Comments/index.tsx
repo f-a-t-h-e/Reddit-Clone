@@ -109,10 +109,12 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
 
   const onCommentDelete = async (comment: IComment) => {
     setDeleteLoading(true);
+    console.log(1);
+
     try {
       const batch = writeBatch(firestore);
 
-      const commentDocRef = doc(collection(firestore, "comments", comment.id));
+      const commentDocRef = doc(firestore, "comments", comment.id);
       batch.delete(commentDocRef);
 
       const postDocRef = doc(firestore, "posts", selectedPost.id);
