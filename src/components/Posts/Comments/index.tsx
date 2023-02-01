@@ -107,7 +107,37 @@ const Comments = ({ communityId, selectedPost, user }: Props) => {
     return true;
   };
 
-  const onCommentDelete = async (comment: IComment) => {};
+  const onCommentDelete = async (comment: IComment) => {
+    setDeleteLoading(true);
+    try {
+      const batch = writeBatch(firestore);
+
+      const commentDocRef = doc(collection(firestore, "comments", comment.id));
+      batch.delete(commentDocRef);
+
+      const postDocRef = doc(firestore, "posts", selectedPost.id);
+      batch.update(postDocRef, {
+        numberOfComments: increment(-1),
+      });
+      await batch.commit();
+
+      setComments((prev) => prev.filter((com) => com.id !== comment.id));
+      setPostState((prev) => ({
+        ...prev,
+        selectedPost: {
+          ...selectedPost,
+          numberOfComments: selectedPost.numberOfComments - 1,
+        },
+      }));
+    } catch (error) {
+      console.log("🚀 ~ file: index.tsx:38 ~ onCommentDelete ~ error", error);
+      setDeleteLoading(false);
+      return false;
+    }
+    setDeleteLoading(false);
+
+    return true;
+  };
 
   const getPostComments = async () => {
     setFetchLoading(true);
