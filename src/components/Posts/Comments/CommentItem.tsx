@@ -28,13 +28,13 @@ const CommentItem = ({
 
   const handleCommentDelete = async () => {
     setDeleteLoading(true);
-    onCommentDelete(comment);
+    await onCommentDelete(comment);
     setDeleteLoading(false);
   };
 
   const handleCommentEdit = async () => {
     setEditLoading(true);
-    onCommentEdit(comment);
+    await onCommentEdit(comment);
     setEditLoading(false);
   };
 
