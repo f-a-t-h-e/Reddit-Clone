@@ -17,7 +17,7 @@ type Props = {
   isLoading: boolean;
 };
 
-const CommentItem = ({ comment, user, isLoading }: Props) => {
+const CommentItem = ({ comment, user, isLoading, onCommentDelete }: Props) => {
   return (
     <Flex>
       <Box mr={2}>
@@ -41,7 +41,11 @@ const CommentItem = ({ comment, user, isLoading }: Props) => {
               <Text fontSize="9pt" _hover={{ color: "blue.500" }}>
                 Edit
               </Text>
-              <Text fontSize="9pt" _hover={{ color: "blue.500" }}>
+              <Text
+                fontSize="9pt"
+                _hover={{ color: "blue.500" }}
+                onClick={() => onCommentDelete(comment)}
+              >
                 Delete
               </Text>
             </>
