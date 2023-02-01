@@ -19,25 +19,25 @@ const Communities = (props: Props) => {
         <Text pl={3} mb={1} fontSize="7pt" fontWeight={500} color="gray.500">
           MY COMMUNITIES
         </Text>
+        <MenuItem
+          fontSize="10pt"
+          _hover={{ bg: "gray.100" }}
+          icon={<GrAdd fontSize={20} />}
+          onClick={() => setOpen(true)}
+        >
+          Create Community
+        </MenuItem>
+        {mySnippets.map((snip, i) => (
+          <MenuListItem
+            key={i}
+            displayText={`r/${snip.communityId}`}
+            icon={FaReddit}
+            iconColor={"blue.500"}
+            link={`/r/${snip.communityId}`}
+            imageURL={snip.imageURL}
+          />
+        ))}
       </Box>
-      <MenuItem
-        fontSize="10pt"
-        _hover={{ bg: "gray.100" }}
-        icon={<GrAdd fontSize={20} />}
-        onClick={() => setOpen(true)}
-      >
-        Create Community
-      </MenuItem>
-      {mySnippets.map((snip, i) => (
-        <MenuListItem
-          key={i}
-          displayText={`r/${snip.communityId}`}
-          icon={FaReddit}
-          iconColor={"blue.500"}
-          link={`/r/${snip.communityId}`}
-          imageURL={snip.imageURL}
-        />
-      ))}
     </>
   );
 };
