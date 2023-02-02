@@ -117,14 +117,16 @@ const useCommunityData = () => {
       }
 
       if (isJoined) {
-        if (community.creatorId === user.uid) {
-          setIsError(
-            "You can't leave a community that you are a moderator in."
-          );
-          return setLoading(false);
-        }
+        // if (community.creatorId === user.uid) {
+        //   setIsError(
+        //     "You can't leave a community that you are a moderator in."
+        //   );
+        //   setLoading(false);
+        //   return;
+        // }
         leaveCommunity(community.id);
-        return setLoading(false);
+        setLoading(false);
+        return;
       }
       joinCommunity(community);
     }
