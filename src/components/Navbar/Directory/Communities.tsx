@@ -37,6 +37,7 @@ const Communities = (props: Props) => {
                     link={`/r/${snip.communityId}`}
                     icon={FaReddit}
                     iconColor="brand.100"
+                    imageURL={snip.imageURL}
                   />
                 )
             )}
