@@ -91,7 +91,7 @@ const UserMenu = ({ user }: Props) => {
           <ChevronDownIcon />
         </Flex>
       </MenuButton>
-      <MenuList>
+      <MenuList zIndex={10}>
         <Communities />
       </MenuList>
     </Menu>
