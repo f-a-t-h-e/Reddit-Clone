@@ -53,13 +53,13 @@ export interface ITabItem {
 type NewPostFormProps = {
   user: User;
   // communityId: string;
-  // communityImageURL?: string;
+  communityImageURL?: string;
 };
 
 const NewPostForm: React.FC<NewPostFormProps> = ({
   user,
   // communityId,
-  // communityImageURL,
+  communityImageURL,
 }) => {
   const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
 
@@ -92,6 +92,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({
       numberOfComments: 0,
       voteStatus: 0,
       createdAt: serverTimestamp() as Timestamp,
+      communityImageURL: communityImageURL || "",
     };
     try {
       // get new ref to that post
