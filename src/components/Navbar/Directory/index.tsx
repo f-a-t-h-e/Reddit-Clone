@@ -31,6 +31,7 @@ import { useRecoilState } from "recoil";
 import { authModalState } from "@/atoms/authModalAtom";
 import { TiHome } from "react-icons/ti";
 import Communities from "./Communities";
+import useDirectoryData from "@/hooks/useDirectoryData";
 
 type Props = {
   user?: User | null;
@@ -38,9 +39,10 @@ type Props = {
 
 const UserMenu = ({ user }: Props) => {
   const [authModal, setModalState] = useRecoilState(authModalState);
+  const { directoryState } = useDirectoryData();
 
   return (
-    <Menu>
+    <Menu isOpen={directoryState.isOpen}>
       <MenuButton
         aria-label="Options"
         borderRadius={4}
