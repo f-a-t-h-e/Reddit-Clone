@@ -5,9 +5,15 @@ const useDirectoryData = () => {
   const [directoryState, setDirectoryState] =
     useRecoilState(directoryMenuState);
 
+  const toggleMenuOpen = () => {
+    setDirectoryState((prev) => ({
+      ...prev,
+      isOpen: !prev.isOpen,
+    }));
+  };
   return {
     directoryState,
-    setDirectoryState,
+    toggleMenuOpen,
   };
 };
 
