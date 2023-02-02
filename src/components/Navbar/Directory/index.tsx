@@ -8,9 +8,11 @@ import {
 } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Flex,
   Icon,
   IconButton,
+  Image,
   Menu,
   MenuButton,
   MenuDivider,
@@ -44,12 +46,15 @@ const UserMenu = ({ user }: Props) => {
   return (
     <Menu isOpen={directoryState.isOpen}>
       <MenuButton
-        aria-label="Options"
-        borderRadius={4}
+        as={Flex}
+        cursor="pointer"
+        padding="0px 6px"
+        borderRadius="4px"
+        _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
         mr={2}
         ml={{ base: 0, md: 2 }}
-        _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
-        onClick={() => toggleMenuOpen()}
+        onClick={toggleMenuOpen}
+        alignItems="center"
       >
         <Flex
           align="center"
@@ -57,13 +62,30 @@ const UserMenu = ({ user }: Props) => {
           width={{ base: "auto", lg: "200px" }}
         >
           <Flex align="center">
-            <Icon as={TiHome} fontSize={24} mr={{ base: 1, md: 2 }} />
+            {directoryState.selectedMenuItem.imageURL ? (
+              <Image
+                src={directoryState.selectedMenuItem.imageURL}
+                alt={"community-image"}
+                borderRadius="full"
+                boxSize={"24px"}
+                mr={{ base: 1, md: 2 }}
+              />
+            ) : (
+              <Icon
+                as={directoryState.selectedMenuItem.icon}
+                fontSize={24}
+                mr={{ base: 1, md: 2 }}
+              />
+            )}
+
             <Box
               display={{ base: "none", lg: "flex" }}
               flexDirection="column"
               fontSize="10pt"
             >
-              <Text fontWeight={600}>Home</Text>
+              <Text fontWeight={600}>
+                {directoryState.selectedMenuItem.displayText}
+              </Text>
             </Box>
           </Flex>
           <ChevronDownIcon />
