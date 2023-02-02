@@ -191,13 +191,16 @@ const PostItem = ({
                 )}
                 <Text
                   fontWeight={700}
+                  _hover={{ textDecoration: "underline" }}
                   onClick={(e) => {
                     e.stopPropagation();
+                    router.push(`/r/${post.communityId}`);
                   }}
                 >
-                  <Link
-                    href={`/r/${post.communityId}`}
-                  >{`r/${post.communityId}`}</Link>
+                  {/* NOTE : Use the router to keep the data cached */}
+                  {/* <Link href={`/r/${post.communityId}`}> */}
+                  {`r/${post.communityId}`}
+                  {/* </Link> */}
                 </Text>
                 <Icon as={BsDot} color="gray.500" fontSize={1} />
               </>
