@@ -32,6 +32,21 @@ const Home: NextPage = () => {
 
   const buildUserHomeFeed = async () => {
     setLoading(true);
+
+    try {
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.tsx:31 ~ buildVisitorHomeFeed ~ error",
+        error
+      );
+    }
+
+    setLoading(false);
+  };
+
+  const buildVisitorHomeFeed = async () => {
+    setLoading(true);
+
     try {
       const postQuery = query(
         collection(firestore, "posts"),
@@ -51,18 +66,7 @@ const Home: NextPage = () => {
     } catch (error) {
       console.log("🚀 ~ file: index.tsx:23 ~ buildUserHomeFeed ~ error", error);
     }
-    setLoading(false);
-  };
 
-  const buildVisitorHomeFeed = async () => {
-    setLoading(true);
-    try {
-    } catch (error) {
-      console.log(
-        "🚀 ~ file: index.tsx:31 ~ buildVisitorHomeFeed ~ error",
-        error
-      );
-    }
     setLoading(false);
   };
 
