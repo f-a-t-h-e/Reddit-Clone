@@ -12,6 +12,9 @@ import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import { IPost } from "@/atoms/posts.Atom";
 import usePosts from "@/hooks/usePosts";
 import PostLoader from "@/components/Posts/PostLoader";
+import { Stack } from "@chakra-ui/react";
+import PostItem from "../components/Posts/PostItem";
+import CreatePostLink from "../components/Community/CreatePostLink";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +22,13 @@ const Home: NextPage = () => {
   const [user, loadingUser] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
   const communityStateValue = useRecoilValue(communityState);
-  const { setPostStateValue } = usePosts();
+  const {
+    postStateValue,
+    onPostDelete,
+    onSelectedPost,
+    onVote,
+    setPostStateValue,
+  } = usePosts();
 
   const buildUserHomeFeed = async () => {
     setLoading(true);
@@ -68,7 +77,30 @@ const Home: NextPage = () => {
 
   return (
     <PageConentLayout>
-      <>{/* <PostsFeed /> */}</>
+      <CreatePostLink />
+      <>
+        {loading ? (
+          <PostLoader />
+        ) : (
+          <Stack>
+            {postStateValue.posts.map((post) => (
+              <PostItem
+                key={post.id}
+                onPostDelete={onPostDelete}
+                onVote={onVote}
+                post={post}
+                userIsAuther={post.authorId === user?.uid}
+                userVoteValue={
+                  postStateValue.postVotes.find(
+                    (vote) => vote.postId === post.id
+                  )?.voteValue || 0
+                }
+                homePage
+              />
+            ))}
+          </Stack>
+        )}
+      </>
       <>{/* Recomendattions */}</>
     </PageConentLayout>
   );

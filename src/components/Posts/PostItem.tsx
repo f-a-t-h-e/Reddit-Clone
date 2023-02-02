@@ -38,6 +38,7 @@ type Props = {
   ) => Promise<boolean>;
   onPostDelete: (post: IPost) => Promise<boolean>;
   onSelectedPost?: (post: IPost) => void;
+  homePage?: boolean;
 };
 
 const PostItem = ({
@@ -172,6 +173,7 @@ const PostItem = ({
         <Stack spacing={1} p="10px 10px">
           <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
             {/* Check for Home Page */}
+
             <Text>
               Posted by u/
               <span>{post.authorName}</span>{" "}
