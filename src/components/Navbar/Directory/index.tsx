@@ -39,7 +39,7 @@ type Props = {
 
 const UserMenu = ({ user }: Props) => {
   const [authModal, setModalState] = useRecoilState(authModalState);
-  const { directoryState } = useDirectoryData();
+  const { directoryState, toggleMenuOpen } = useDirectoryData();
 
   return (
     <Menu isOpen={directoryState.isOpen}>
