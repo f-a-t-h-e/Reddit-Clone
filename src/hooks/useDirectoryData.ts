@@ -23,6 +23,10 @@ const useDirectoryData = () => {
       selectedMenuItem: menuItem,
     }));
     router.push(menuItem.link);
+    if (directoryState.isOpen) {
+      toggleMenuOpen();
+    }
+    console.log(1);
   };
 
   return {
