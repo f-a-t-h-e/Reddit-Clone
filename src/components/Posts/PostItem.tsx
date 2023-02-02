@@ -5,6 +5,7 @@ import {
   Flex,
   Icon,
   Image,
+  Link,
   Skeleton,
   Spinner,
   Stack,
@@ -48,6 +49,7 @@ const PostItem = ({
   onVote,
   userIsAuther,
   userVoteValue,
+  homePage,
 }: Props) => {
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [error, setError] = useState("");
@@ -101,6 +103,7 @@ const PostItem = ({
     },
     []
   );
+
   return (
     <Flex
       border="1px solid"
@@ -173,8 +176,33 @@ const PostItem = ({
         <Stack spacing={1} p="10px 10px">
           <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
             {/* Check for Home Page */}
-
-            <Text>
+            {homePage && (
+              <>
+                {post.communityImageURL ? (
+                  <Image
+                    src={post.communityImageURL}
+                    alt={post.communityId}
+                    borderRadius="full"
+                    boxSize="18px"
+                    mr={2}
+                  />
+                ) : (
+                  <Icon as={FaReddit} fontSize="18pt" mr="1" color="blue.500" />
+                )}
+                <Text
+                  fontWeight={700}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <Link
+                    href={`/r/${post.communityId}`}
+                  >{`r/${post.communityId}`}</Link>
+                </Text>
+                <Icon as={BsDot} color="gray.500" fontSize={1} />
+              </>
+            )}
+            <Text display="contents">
               Posted by u/
               <span>{post.authorName}</span>{" "}
               {moment(new Date(post.createdAt.seconds * 1000)).fromNow(false)}
