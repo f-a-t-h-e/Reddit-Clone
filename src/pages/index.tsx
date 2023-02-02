@@ -8,7 +8,14 @@ import { auth, firestore } from "@/firebase/clientApp";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { communityState } from "@/atoms/communities.Atom";
-import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { IPost } from "@/atoms/posts.Atom";
 import usePosts from "@/hooks/usePosts";
 import PostLoader from "@/components/Posts/PostLoader";
@@ -34,6 +41,33 @@ const Home: NextPage = () => {
     setLoading(true);
 
     try {
+      if (communityStateValue.mySnippets.length) {
+        const userCommunityIds = communityStateValue.mySnippets.map(
+          (snip) => snip.communityId
+        );
+
+        const postsQuery = query(
+          collection(firestore, "posts"),
+          where("communityId", "in", userCommunityIds),
+          limit(10)
+        );
+        const postDocs = await getDocs(postsQuery);
+
+        const posts = postDocs.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as IPost)
+        );
+
+        setPostStateValue((prev) => ({
+          ...prev,
+          posts,
+        }));
+      } else {
+        return buildVisitorHomeFeed();
+      }
     } catch (error) {
       console.log(
         "🚀 ~ file: index.tsx:31 ~ buildVisitorHomeFeed ~ error",
