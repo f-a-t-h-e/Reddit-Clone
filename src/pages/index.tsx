@@ -16,7 +16,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { IPost } from "@/atoms/posts.Atom";
+import { IPost, IPostVote } from "@/atoms/posts.Atom";
 import usePosts from "@/hooks/usePosts";
 import PostLoader from "@/components/Posts/PostLoader";
 import { Stack } from "@chakra-ui/react";
@@ -105,15 +105,46 @@ const Home: NextPage = () => {
     setLoading(false);
   };
 
-  const getUserHostVotes = () => {};
+  const getUserHostVotes = async () => {
+    try {
+      // TO_DO : merging this state propperly will decrease the Big(O) of this
+      // to allow fetching only unavailable data
+      const postIds = postStateValue.posts.map((post) => post.id);
+      const postVotesQuery = query(
+        collection(firestore, `users/${user?.uid}/postVotes`),
+        where("postId", "in", postIds)
+      );
+
+      const postVoteDocs = await getDocs(postVotesQuery);
+      const postVotes = postVoteDocs.docs.map(
+        (vote) =>
+          ({
+            id: vote.id,
+            ...vote.data(),
+          } as IPostVote)
+      );
+
+      setPostStateValue((prev) => ({
+        ...prev,
+        postVotes,
+      }));
+    } catch (error) {
+      console.log("🚀 ~ file: index.tsx:112 ~ getUserHostVotes ~ error", error);
+    }
+  };
 
   // useEffects
   useEffect(() => {
-    if (communityStateValue.snippetFetched) buildUserHomeFeed();
-  }, [user, communityStateValue.snippetFetched]);
-  useEffect(() => {
     if (!user && !loadingUser) buildVisitorHomeFeed();
   }, [user, loadingUser]);
+
+  useEffect(() => {
+    if (communityStateValue.snippetFetched) buildUserHomeFeed();
+  }, [user, communityStateValue.snippetFetched]);
+
+  useEffect(() => {
+    if (user && postStateValue.posts.length) getUserHostVotes();
+  }, [user, postStateValue.posts]);
 
   return (
     <PageConentLayout>
