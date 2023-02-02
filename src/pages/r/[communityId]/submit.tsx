@@ -21,10 +21,12 @@ const SubmitPostPage = ({}: Props) => {
 
   useEffect(() => {
     if (!communityStateValue.currentCommunity) {
-      router.push("/r/");
+      router.push("/r/", undefined, { shallow: true });
     } else if (!user && communityStateValue.currentCommunity.id) {
       // TO_DO : Open authModal instead
-      router.push(`/r/${communityStateValue.currentCommunity.id}`);
+      router.push(`/r/${communityStateValue.currentCommunity.id}`, undefined, {
+        shallow: true,
+      });
     }
   }, [user, communityStateValue.currentCommunity, router]);
   return (
@@ -33,7 +35,12 @@ const SubmitPostPage = ({}: Props) => {
         <Box p="14px 0px" borderBottom="1px solid " borderColor="white">
           <Text>Create a Post</Text>
         </Box>
-        {user && <NewPostForm user={user} />}
+        {user && (
+          <NewPostForm
+            user={user}
+            communityImageURL={communityStateValue.currentCommunity?.imageURL}
+          />
+        )}
       </>
       <>
         {communityStateValue.currentCommunity && (
