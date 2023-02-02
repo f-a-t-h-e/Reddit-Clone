@@ -22,13 +22,14 @@ import PostLoader from "@/components/Posts/PostLoader";
 import { Stack } from "@chakra-ui/react";
 import PostItem from "../components/Posts/PostItem";
 import CreatePostLink from "../components/Community/CreatePostLink";
+import useCommunityData from "../hooks/useCommunityData";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const Home: NextPage = () => {
   const [user, loadingUser] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
-  const communityStateValue = useRecoilValue(communityState);
+  const { communityStateValue } = useCommunityData();
   const {
     postStateValue,
     onPostDelete,
@@ -107,6 +108,9 @@ const Home: NextPage = () => {
   const getUserHostVotes = () => {};
 
   // useEffects
+  useEffect(() => {
+    if (communityStateValue.snippetFetched) buildUserHomeFeed();
+  }, [user, communityStateValue.snippetFetched]);
   useEffect(() => {
     if (!user && !loadingUser) buildVisitorHomeFeed();
   }, [user, loadingUser]);
