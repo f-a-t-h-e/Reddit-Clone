@@ -16,7 +16,7 @@ const Communities = (props: Props) => {
   return (
     <>
       <CreateCommunityModal open={open} onClose={() => setOpen(false)} />
-      {mySnippets.filter((snip) => snip.isMod) &&
+      {mySnippets.find((snip) => snip.isMod) &&
         ((
           <Box mt={3} mb={4}>
             <Text
