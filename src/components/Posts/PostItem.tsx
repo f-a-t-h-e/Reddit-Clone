@@ -204,7 +204,8 @@ const PostItem = ({
             )}
             <Text display="contents">
               Posted by u/
-              <span>{post.authorName}</span>{" "}
+              <span>{post.authorName}</span>
+              <span style={{ width: "5px" }}> </span>
               {moment(new Date(post.createdAt.seconds * 1000)).fromNow(false)}
             </Text>
           </Stack>
