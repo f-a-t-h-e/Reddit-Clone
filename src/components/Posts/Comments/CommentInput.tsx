@@ -82,9 +82,7 @@ const ComentInput = ({
                 h="26px"
                 isDisabled={!commentText.length}
                 isLoading={createLoading}
-                onClick={() =>
-                  onCreateComment({ text: commentText, user, post })
-                }
+                onClick={() => onCreateComment({ text: commentText, user })}
               >
                 Comment
               </Button>
