@@ -49,6 +49,7 @@ const UserMenu = ({ user }: Props) => {
         mr={2}
         ml={{ base: 0, md: 2 }}
         _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
+        onClick={() => toggleMenuOpen()}
       >
         <Flex
           align="center"
