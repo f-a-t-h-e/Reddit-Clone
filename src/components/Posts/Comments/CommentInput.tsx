@@ -40,9 +40,9 @@ const ComentInput = ({
         <>
           <Text mb={1}>
             Comment as{" "}
-            <Text display="inline-block" style={{ color: "#3182CE" }}>
+            <span style={{ color: "#3182CE" }}>
               {user.displayName || user.email!.split("@")[0]}
-            </Text>
+            </span>
           </Text>
           <Box
             border="1px solid transparent"
