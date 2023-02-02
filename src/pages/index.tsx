@@ -75,14 +75,12 @@ const Home: NextPage = () => {
   // useEffects
   useEffect(() => {
     if (!user && !loadingUser) buildVisitorHomeFeed();
-
-    return () => {};
   }, [user, loadingUser]);
 
   return (
     <PageConentLayout>
-      <CreatePostLink />
       <>
+        <CreatePostLink />
         {loading ? (
           <PostLoader />
         ) : (
@@ -100,6 +98,7 @@ const Home: NextPage = () => {
                   )?.voteValue || 0
                 }
                 homePage
+                onSelectedPost={onSelectedPost}
               />
             ))}
           </Stack>
