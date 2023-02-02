@@ -96,7 +96,7 @@ const About = ({ communityData }: Props) => {
               <Text>
                 {new Intl.NumberFormat("en-US", {
                   notation: "compact",
-                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
                 }).format(communityData.numberOfMembers)}
               </Text>
               <Text>Members</Text>
