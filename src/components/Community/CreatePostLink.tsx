@@ -9,6 +9,7 @@ import { IoImageOutline } from "react-icons/io5";
 import { auth } from "@/firebase/clientApp";
 import { authModalState } from "@/atoms/authModalAtom";
 import { useSetRecoilState } from "recoil";
+import useDirectoryData from "@/hooks/useDirectoryData";
 
 type Props = {};
 
@@ -17,6 +18,7 @@ const CreatePostLink = (props: Props) => {
   // TO_DO : Remove this for bandwidth
   const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalState);
+  const { toggleMenuOpen } = useDirectoryData();
 
   const onClick = () => {
     if (!user) {
@@ -28,6 +30,8 @@ const CreatePostLink = (props: Props) => {
     if (communityId) {
       router.push(`/r/${router.query.communityId}/submit`);
       return;
+    } else {
+      toggleMenuOpen();
     }
   };
 
