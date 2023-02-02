@@ -173,7 +173,8 @@ const PostItem = ({
           <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
             {/* Check for Home Page */}
             <Text>
-              Posted by u/<Text display="inline-block">{post.authorName}</Text>{" "}
+              Posted by u/
+              <span>{post.authorName}</span>{" "}
               {moment(new Date(post.createdAt.seconds * 1000)).fromNow(false)}
             </Text>
           </Stack>
