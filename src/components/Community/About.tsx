@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiCakeLine } from "react-icons/ri";
 import { Community, communityState } from "@/atoms/communities.Atom";
@@ -93,7 +93,12 @@ const About = ({ communityData }: Props) => {
           {/* start members info */}
           <Flex w="100%" p={2} fontSize="10pt" fontWeight={700}>
             <Flex direction="column" grow={1}>
-              <Text>{communityData.numberOfMembers.toLocaleString()}</Text>
+              <Text>
+                {new Intl.NumberFormat("en-US", {
+                  notation: "compact",
+                  minimumFractionDigits: 2,
+                }).format(communityData.numberOfMembers)}
+              </Text>
               <Text>Members</Text>
             </Flex>
 
