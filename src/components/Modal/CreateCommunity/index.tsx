@@ -30,14 +30,16 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { BsFillPersonFill, BsFillEyeFill } from "react-icons/bs";
 import { HiLockClosed } from "react-icons/hi";
 import { auth, firestore } from "@/firebase/clientApp";
+import { useRouter } from "next/router";
+import useDirectoryData from "../../../hooks/useDirectoryData";
 
 type Props = {
   open: boolean;
-  onClose: () => void;
+  handleClose: () => void;
 };
 const format = /^[\w]{3,21}$/;
 
-const CreateCommunityModal = ({ open, onClose }: Props) => {
+const CreateCommunityModal = ({ open, handleClose }: Props) => {
   const [user] = useAuthState(auth);
   // validation
   const [charsRemaining, setCharsRemaining] = useState(21);
@@ -48,6 +50,8 @@ const CreateCommunityModal = ({ open, onClose }: Props) => {
   // ui
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter();
+  const { toggleMenuOpen } = useDirectoryData();
   const onNameChange = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,6 +115,9 @@ const CreateCommunityModal = ({ open, onClose }: Props) => {
             }
           );
         });
+        handleClose();
+        toggleMenuOpen();
+        router.push(`/r/${communityName}`);
       } else {
         throw new Error("Please Log In first");
       }
@@ -124,7 +131,7 @@ const CreateCommunityModal = ({ open, onClose }: Props) => {
 
   return (
     <>
-      <Modal isOpen={open} onClose={onClose} size="lg">
+      <Modal isOpen={open} onClose={handleClose} size="lg">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
@@ -238,7 +245,7 @@ const CreateCommunityModal = ({ open, onClose }: Props) => {
             <Button
               mr={2}
               h="30px"
-              onClick={onClose}
+              onClick={handleClose}
               variant="outline"
               isDisabled={loading}
             >
