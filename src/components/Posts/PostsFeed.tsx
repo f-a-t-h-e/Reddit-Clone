@@ -47,7 +47,7 @@ const PostsFeed = ({ communityData }: Props) => {
   useEffect(() => {
     getPosts();
     // TO_DO : fix this, it has a solution.
-  }, []);
+  }, [communityData]);
 
   return (
     <>
