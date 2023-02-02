@@ -120,11 +120,14 @@ const About = ({ communityData }: Props) => {
           {/* end CreatedAt */}
           {/* you can use router.query.communityId */}
           {/* TO_DO : Add a hadler function to check for the user first */}
-          <Link href={`/r/${communityData.id}/submit`}>
-            <Button mt={3} h="30px" w="100%">
+          <Button mt={3} h="30px" w="100%">
+            <Link
+              href={`/r/${communityData.id}/submit`}
+              style={{ width: "100%" }}
+            >
               Create Post
-            </Button>
-          </Link>
+            </Link>
+          </Button>
           {/* start admin section */}
           {user && user.uid === communityData.creatorId && (
             <>
