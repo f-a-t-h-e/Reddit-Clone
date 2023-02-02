@@ -41,6 +41,8 @@ const UserMenu = ({ user }: Props) => {
   return (
     <Menu>
       <MenuButton
+        as={Box}
+        cursor="pointer"
         aria-label="Options"
         borderRadius={4}
         _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
