@@ -29,7 +29,6 @@ const useDirectoryData = () => {
     if (directoryState.isOpen) {
       toggleMenuOpen();
     }
-    console.log(1);
   };
   useEffect(() => {
     const { currentCommunity } = communityStateValue;
