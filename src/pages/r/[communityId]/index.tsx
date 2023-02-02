@@ -25,7 +25,7 @@ const CommunityPage = ({ communityData }: Props) => {
       currentCommunity: communityData,
     }));
     // TO_DO : check if you should add dependencies
-  }, []);
+  }, [communityData]);
   if (!communityData) {
     return <CommunityNotFound />;
   }
