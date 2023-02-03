@@ -20,9 +20,10 @@ import { IPost, IPostVote } from "@/atoms/posts.Atom";
 import usePosts from "@/hooks/usePosts";
 import PostLoader from "@/components/Posts/PostLoader";
 import { Stack } from "@chakra-ui/react";
-import PostItem from "../components/Posts/PostItem";
-import CreatePostLink from "../components/Community/CreatePostLink";
-import useCommunityData from "../hooks/useCommunityData";
+import PostItem from "@/components/Posts/PostItem";
+import CreatePostLink from "@/components/Community/CreatePostLink";
+import useCommunityData from "@/hooks/useCommunityData";
+import Recommendations from "@/components/Community/Recommendations";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -179,7 +180,9 @@ const Home: NextPage = () => {
           </Stack>
         )}
       </>
-      <>{/* Recomendattions */}</>
+      <>
+        <Recommendations />
+      </>
     </PageConentLayout>
   );
 };
