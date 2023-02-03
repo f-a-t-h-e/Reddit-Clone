@@ -66,7 +66,7 @@ const Recommendation = (props: Props) => {
         p="6px 10px"
         h="70px"
         fontWeight={700}
-        bgImg="url/image/reCommsArt.png"
+        bgImg="url/images/reCommsArt.png"
         bgSize="cover"
       >
         Top Communities
