@@ -8,18 +8,18 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { Community } from "../../atoms/communities.Atom";
-import { firestore } from "../../firebase/clientApp";
-import useCommunityData from "../../hooks/useCommunityData";
+import { Community } from "@/atoms/communities.Atom";
+import { firestore } from "@/firebase/clientApp";
+import useCommunityData from "@/hooks/useCommunityData";
 
 type Props = {};
 
-const Recomendation = (props: Props) => {
+const Recommendation = (props: Props) => {
   const [communities, setCommunities] = useState<Community[]>([]);
   const [loading, setLoading] = useState(false);
   const { communityStateValue, onJoinOrLeaveCommunity } = useCommunityData();
 
-  const getCommunityRecomendations = async () => {
+  const getCommunityRecommendations = async () => {
     setLoading(true);
     try {
       const communityQuery = query(
@@ -40,7 +40,7 @@ const Recomendation = (props: Props) => {
       );
     } catch (error) {
       console.log(
-        "🚀 ~ file: Recomendation.tsx:10 ~ getCommunityRecomendations ~ error",
+        "🚀 ~ file: Recommendation.tsx:10 ~ getCommunityRecommendations ~ error",
         error
       );
     }
@@ -48,7 +48,7 @@ const Recomendation = (props: Props) => {
   };
 
   useEffect(() => {
-    getCommunityRecomendations();
+    getCommunityRecommendations();
   }, []);
 
   return (
@@ -76,4 +76,4 @@ const Recomendation = (props: Props) => {
   );
 };
 
-export default Recomendation;
+export default Recommendation;
