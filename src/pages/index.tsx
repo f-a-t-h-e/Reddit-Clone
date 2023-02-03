@@ -144,6 +144,12 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (user && postStateValue.posts.length) getUserHostVotes();
+    return () => {
+      setPostStateValue((prev) => ({
+        ...prev,
+        postVotes: [],
+      }));
+    };
   }, [user, postStateValue.posts]);
 
   return (
