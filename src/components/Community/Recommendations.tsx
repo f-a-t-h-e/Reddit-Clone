@@ -67,8 +67,10 @@ const Recommendation = (props: Props) => {
         h="70px"
         fontWeight={700}
         // bgImg="url(./images/recCommsArt.png)"
-        bgImg="./images/recCommsArt.png"
+        // bgImg="./images/recCommsArt.png"
         bgSize="cover"
+        bgGradient="linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75)),
+        url('images/recCommsArt.png')"
       >
         Top Communities
       </Flex>
