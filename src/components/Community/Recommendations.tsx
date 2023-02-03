@@ -92,7 +92,10 @@ const Recommendation = (props: Props) => {
       </Flex>
       {/* end Banner */}
 
-      <Flex direction="column" gap="1px" bg="gray.200">
+      <Flex
+        direction="column"
+        //  gap="1px" bg="gray.200"
+      >
         {loading ? (
           <Stack mt={2} p={3}>
             <Flex justify="space-between" align="center">
@@ -129,12 +132,13 @@ const Recommendation = (props: Props) => {
                   pos="relative"
                   key={item.id}
                   fontSize="10pt"
+                  borderBottom="1px solid"
                   // Note : You could remove this and add background to the
                   // parent and use "gap"s
                   //
                   // borderBottom={
                   //   i === communities.length - 1 ? undefined : "1px solid" }
-                  // borderColor="gray.200"
+                  borderColor="gray.200"
                   fontWeight={600}
                   onClick={() => router.push(`/r/${item.id}`)}
                 >
