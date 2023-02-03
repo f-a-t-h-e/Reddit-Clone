@@ -44,7 +44,6 @@ const useDirectoryData = () => {
         },
       }));
     }
-    console.log("err");
   }, [communityStateValue.currentCommunity]);
   return {
     directoryState,
