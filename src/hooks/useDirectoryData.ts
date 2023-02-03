@@ -1,5 +1,6 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
+  defaultMenuItem,
   directoryMenuState,
   IDirectoryMenueItem,
 } from "@/atoms/directoryMenu.Atom";
@@ -42,6 +43,11 @@ const useDirectoryData = () => {
           iconColor: "blue.500",
           imageURL: currentCommunity.imageURL,
         },
+      }));
+    } else {
+      setDirectoryState((prev) => ({
+        ...prev,
+        selectedMenuItem: defaultMenuItem,
       }));
     }
   }, [communityStateValue.currentCommunity]);
