@@ -1,4 +1,14 @@
-import { Flex } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Image,
+  Skeleton,
+  SkeletonCircle,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import {
   collection,
   getDocs,
@@ -11,6 +21,9 @@ import React, { useEffect, useState } from "react";
 import { Community } from "@/atoms/communities.Atom";
 import { firestore } from "@/firebase/clientApp";
 import useCommunityData from "@/hooks/useCommunityData";
+import Link from "next/link";
+import { FaReddit } from "react-icons/fa";
+import { useRouter } from "next/router";
 
 type Props = {};
 
@@ -18,6 +31,7 @@ const Recommendation = (props: Props) => {
   const [communities, setCommunities] = useState<Community[]>([]);
   const [loading, setLoading] = useState(false);
   const { communityStateValue, onJoinOrLeaveCommunity } = useCommunityData();
+  const router = useRouter();
 
   const getCommunityRecommendations = async () => {
     setLoading(true);
@@ -57,9 +71,11 @@ const Recommendation = (props: Props) => {
       bg="white"
       borderRadius={4}
       border="1px solid"
-      borderColor="gray.300"
+      borderColor="gray.200"
+      // Note : don't delete this or yo will have to add border to the last element of the children or the children...
       overflow="hidden"
     >
+      {/* start Banner */}
       <Flex
         align="flex-end"
         color="white"
@@ -74,7 +90,7 @@ const Recommendation = (props: Props) => {
       >
         Top Communities
       </Flex>
-      <Flex></Flex>
+      {/* end Banner */}
     </Flex>
   );
 };
