@@ -117,7 +117,86 @@ const Recommendation = (props: Props) => {
             </Flex>
           </Stack>
         ) : (
-          <></>
+          <>
+            {communities.map((item, i) => {
+              const isJoined = !!communityStateValue.mySnippets.find(
+                (snip) => snip.communityId === item.id
+              );
+              return (
+                <Flex
+                  bg="white"
+                  cursor="pointer"
+                  pos="relative"
+                  key={item.id}
+                  fontSize="10pt"
+                  // Note : You could remove this and add background to the parent and use "gap"s
+                  //
+                  // borderBottom={
+                  //   i === communities.length - 1 ? undefined : "1px solid" }
+                  // borderColor="gray.200"
+                  fontWeight={600}
+                  onClick={() => router.push(`/r/${item.id}`)}
+                >
+                  <Flex
+                    align="center"
+                    p="10px 12px"
+                    w="100%"
+                    h="100%"
+                    _hover={{ bg: "gray.200" }}
+                  >
+                    <Flex w="70%" align="center">
+                      <Flex w="15%" align="center" justify="center">
+                        <Text>{i + 1}</Text>
+                      </Flex>
+                      <Flex align="center" w="80%">
+                        {item.imageURL ? (
+                          <Image
+                            src={item.imageURL}
+                            alt={item.id}
+                            borderRadius="full"
+                            boxSize="28px"
+                            mr="2"
+                          />
+                        ) : (
+                          <Icon
+                            as={FaReddit}
+                            fontSize={30}
+                            color="brand.100"
+                            mr="2"
+                          />
+                        )}
+                        <Text
+                          whiteSpace="nowrap"
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                        >
+                          r/{item.id}
+                        </Text>
+                      </Flex>
+                    </Flex>
+                    <Box w="20%"></Box>
+                  </Flex>
+                  <Button
+                    pos="absolute"
+                    top="50%"
+                    transform="auto"
+                    translateY="-50%"
+                    right="1"
+                    variant={isJoined ? "outline" : "solid"}
+                    height="22px"
+                    fontSize="8pt"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onJoinOrLeaveCommunity(item, isJoined);
+                    }}
+                    isLoading={loading}
+                  >
+                    {isJoined ? "Joined" : "Join"}
+                  </Button>
+                </Flex>
+              );
+            })}
+          </>
         )}
       </Flex>
     </Flex>
