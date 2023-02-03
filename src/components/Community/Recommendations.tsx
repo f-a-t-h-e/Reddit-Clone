@@ -129,7 +129,8 @@ const Recommendation = (props: Props) => {
                   pos="relative"
                   key={item.id}
                   fontSize="10pt"
-                  // Note : You could remove this and add background to the parent and use "gap"s
+                  // Note : You could remove this and add background to the
+                  // parent and use "gap"s
                   //
                   // borderBottom={
                   //   i === communities.length - 1 ? undefined : "1px solid" }
@@ -196,6 +197,12 @@ const Recommendation = (props: Props) => {
                 </Flex>
               );
             })}
+            {/* TO_DO : Add functionality to this */}
+            <Box p="10px 20px">
+              <Button h="30px" w="100%">
+                View All
+              </Button>
+            </Box>
           </>
         )}
       </Flex>
